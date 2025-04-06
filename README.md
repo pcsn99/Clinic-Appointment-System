@@ -1,6 +1,6 @@
-# Clinic Appointment Scheduling System – Admin Project Setup
+# Clinic Appointment Scheduling System
 
-Welcome! Follow these steps to set up the **Admin Laravel Project** locally.
+Welcome! Follow these steps to set up the **Laravel Project** locally.
 
 ---
 
