@@ -25,12 +25,12 @@ Welcome! Follow these steps to set up the **Admin Laravel Project** locally.
 
 ---
 
-## 📁 Step 2: Navigate to the Admin Project Folder
+##  Step 2: Navigate to the Admin Project Folder
 
 In your terminal:
 
 ```bash
-cd path/to/admin/project
+cd admin
 ```
 
 Make sure you're in the correct Laravel folder before continuing.
@@ -59,11 +59,11 @@ This will:
 | Registrar | registrar@school       | password123  |
 | PE        | pe@school              | password123  |
 
-Use any of these to log in at `/login`.
+Use any of these to log in at `/`.
 
 ---
 
-## 🧪 Need Help?
+##  Need Help?
 
 If anything breaks or the database is out of sync, you can reset it with:
 
