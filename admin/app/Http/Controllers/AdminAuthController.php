@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Admin;
+use App\Models\User;
+use App\Models\Schedule;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AdminAuthController extends Controller
@@ -16,22 +16,34 @@ class AdminAuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->only('username', 'password');
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required',
+        ]);
 
-        if (Auth::guard('admin')->attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->route('admin.dashboard');
+        $user = User::where('username', $request->username)->where('role', 'admin')->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return back()->with('error', 'Invalid credentials.');
         }
 
-        return back()->withErrors(['email' => 'Invalid credentials.']);
+        session(['admin' => $user]);
+
+        $schedules = Schedule::orderBy('date')->orderBy('start_time')->get();
+        return view('dashboard', compact('schedules'));
     }
 
     public function logout(Request $request)
     {
-        Auth::guard('admin')->logout();
+        $request->session()->forget('admin');
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return redirect()->route('admin.login');
+    }
+
+    public function dashboard()
+    {
+        return view('dashboard');
     }
 }
