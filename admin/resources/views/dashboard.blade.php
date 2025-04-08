@@ -62,9 +62,12 @@
     <hr>
 
     <h3>🔐 PIN Codes</h3>
-    <p><em>PIN codes for students</em></p>
-
-    <hr>
+    <p><em>These are valid for the current hour:</em></p>
+    
+    <ul>
+        <li><strong>Attendance PIN:</strong> {{ $attendancePin->pin_code ?? 'Not Set' }}</li>
+        <li><strong>Slot Limit Override PIN:</strong> {{ $overridePin->pin_code ?? 'Not Set' }}</li>
+    </ul>
 
     <form method="POST" action="{{ route('admin.logout') }}">
         @csrf

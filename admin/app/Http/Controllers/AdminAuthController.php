@@ -53,7 +53,10 @@ class AdminAuthController extends Controller
             })
             ->orderBy('schedule_id')
             ->get();
+
+            $attendancePin = \App\Models\PinCode::where('purpose', 'appointment_attendance')->first();
+            $overridePin = \App\Models\PinCode::where('purpose', 'slot_limit_override')->first();
     
-        return view('dashboard', compact('appointmentsToday'));
+            return view('dashboard', compact('appointmentsToday', 'attendancePin', 'overridePin'));
     }
 }
