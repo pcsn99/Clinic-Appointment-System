@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Schedule;
+use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -26,11 +28,10 @@ class AdminAuthController extends Controller
         if (!$user || !Hash::check($request->password, $user->password)) {
             return back()->with('error', 'Invalid credentials.');
         }
-
+        $request->session()->regenerate(); 
         session(['admin' => $user]);
 
-        $schedules = Schedule::orderBy('date')->orderBy('start_time')->get();
-        return view('dashboard', compact('schedules'));
+        return redirect()->route('admin.dashboard');
     }
 
     public function logout(Request $request)
@@ -44,6 +45,15 @@ class AdminAuthController extends Controller
 
     public function dashboard()
     {
-        return view('dashboard');
+        $today = Carbon::today()->toDateString();
+    
+        $appointmentsToday = Appointment::with(['user', 'schedule'])
+            ->whereHas('schedule', function ($q) use ($today) {
+                $q->whereDate('date', $today);
+            })
+            ->orderBy('schedule_id')
+            ->get();
+    
+        return view('dashboard', compact('appointmentsToday'));
     }
 }
