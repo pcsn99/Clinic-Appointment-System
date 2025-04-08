@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Schedule;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AdminAppointmentController extends Controller
 {
@@ -61,47 +62,58 @@ class AdminAppointmentController extends Controller
         return redirect()->route('admin.dashboard')->with('success', 'Appointment booked successfully.');
     }
 
+
+
     public function index()
     {
-        // past appointments as absent if not already present
+        // cancel past unmarked appointments
         $pastAppointments = Appointment::whereHas('schedule', function ($query) {
             $query->where('end_time', '<', now()->format('H:i'))
-                ->whereDate('date', now());
+                  ->whereDate('date', now());
         })->where('is_present', false)->get();
-
+    
         foreach ($pastAppointments as $appt) {
             $appt->status = 'cancelled';
             $appt->save();
         }
-
-        // only show upcoming appointments
-        $appointments = Appointment::with(['user', 'schedule'])
-            ->whereHas('schedule', function ($query) {
-                $query->where(function ($q) {
-                    $q->whereDate('date', '>', now()->toDateString())
-                    ->orWhere(function ($q2) {
-                        $q2->whereDate('date', now()->toDateString())
-                            ->where('end_time', '>', now()->format('H:i'));
-                    });
-                });
-            })->orderBy('schedule_id')
+    
+        
+        $appointments = Appointment::join('schedules', 'appointments.schedule_id', '=', 'schedules.id')
+            ->join('users', 'appointments.user_id', '=', 'users.id')
+            ->whereDate('schedules.date', '>=', now()->toDateString())
+            ->orderBy('schedules.date')
+            ->orderBy('schedules.start_time')
+            ->select('appointments.*')
+            ->with(['user', 'schedule'])
             ->get();
-
-        return view('appointments.index', compact('appointments'));
+    
+        return view('appointments.index', [
+            'appointments' => $appointments
+        ]);
     }
+    
+    
+    
+    
+    
+    
+    
 
     public function mark(Request $request, Appointment $appointment)
     {
-        $request->validate([
-            'is_present' => 'required|boolean',
-        ]);
-
-        $appointment->is_present = $request->is_present;
-        $appointment->status = $request->is_present ? 'completed' : 'cancelled';
+        $value = filter_var($request->input('is_present'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+    
+        if (!is_bool($value)) {
+            return back()->with('error', 'Invalid presence value.');
+        }
+    
+        $appointment->is_present = $value;
+        $appointment->status = $value ? 'completed' : 'booked';
         $appointment->save();
-
+    
         return back()->with('success', 'Attendance updated.');
     }
+    
 
     public function bulkDelete(Request $request)
     {
@@ -113,4 +125,53 @@ class AdminAppointmentController extends Controller
 
         return back()->with('success', 'Selected appointments deleted.');
     }
+
+
+    public function calendarEvents()
+    {
+        $grouped = Schedule::all()->groupBy('date');
+    
+        $events = $grouped->map(function ($schedules, $date) {
+            $totalSlots = 0;
+            $totalBooked = 0;
+    
+            foreach ($schedules as $sched) {
+                $totalSlots += $sched->slot_limit;
+                $totalBooked += $sched->appointments()->count();
+            }
+    
+            $color = $totalBooked >= $totalSlots ? '#e74c3c' : ($totalBooked > 0 ? '#f39c12' : '#2ecc71');
+    
+            return [
+                'start' => $date,
+                'end' => $date,
+                'display' => 'background',   
+                'backgroundColor' => $color, 
+                'borderColor' => $color,     
+            ];
+        })->values();
+    
+        return response()->json($events);
+    }
+    
+
+    public function schedulesByDate(Request $request)
+    {
+        $date = $request->date;
+    
+        $schedules = Schedule::where('date', $date)
+            ->withCount('appointments')
+            ->get()
+            ->map(function ($s) {
+                return [
+                    'start_time' => $s->start_time,
+                    'end_time' => $s->end_time,
+                    'slot_limit' => $s->slot_limit,
+                    'booked' => $s->appointments_count,
+                ];
+            });
+    
+        return response()->json($schedules);
+    }
+    
 }

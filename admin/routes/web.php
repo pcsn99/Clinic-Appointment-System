@@ -26,6 +26,9 @@ Route::middleware('auth.admin')->group(function () {
     Route::get('/appointments', [AdminAppointmentController::class, 'index'])->name('admin.appointments.index');
     Route::post('/appointments/{appointment}/mark', [AdminAppointmentController::class, 'mark'])->name('admin.appointments.mark');
     Route::post('/appointments/bulk-delete', [AdminAppointmentController::class, 'bulkDelete'])->name('admin.appointments.bulkDelete');
+    Route::get('/appointments/calendar-events', [AdminAppointmentController::class, 'calendarEvents']);
+    Route::get('/appointments/schedules-by-date', [AdminAppointmentController::class, 'schedulesByDate']);
+
 
 });
 
