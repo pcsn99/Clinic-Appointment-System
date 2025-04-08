@@ -69,6 +69,11 @@ If anything breaks or the database is out of sync, you can reset it with:
 
 ```bash
 php artisan migrate:fresh --seed
+php artisan db:seed --class=TestDataSeeder
+php artisan migrate --path=database/migrations/events.php
+php artisan db:seed --class=PinCodeSeeder
+
+
 ```
 NOTE: THERE IS STILL NO DASHBOARD FILE. PLEASE ADD FRONT END HEHE
 
