@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\StudentDashboardController;
 use App\Http\Controllers\StudentAppointmentController;
 
@@ -24,5 +25,8 @@ Route::middleware(['auth.student'])->group(function () {
     Route::get('/appointments/schedules-by-date', [StudentAppointmentController::class, 'schedulesByDate']);
     Route::get('/appointments/calendar-events', [StudentAppointmentController::class, 'calendarEvents']);
     Route::post('/appointments/{appointment}/mark-present', [StudentAppointmentController::class, 'markAsPresent'])->name('student.appointments.markPresent');
+
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
 
 });
