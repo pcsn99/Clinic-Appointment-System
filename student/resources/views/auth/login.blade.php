@@ -1,7 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-    <h2>Login</h2>
+<style>
+    {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+</style>
 
     @if($errors->any())
         <p>{{ $errors->first() }}</p>
