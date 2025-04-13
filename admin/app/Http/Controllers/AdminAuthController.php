@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Admin;
+use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Schedule;
+use App\Models\Appointment;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AdminAuthController extends Controller
@@ -16,22 +18,45 @@ class AdminAuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->only('username', 'password');
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required',
+        ]);
 
-        if (Auth::guard('admin')->attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->route('admin.dashboard');
+        $user = User::where('username', $request->username)->where('role', 'admin')->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return back()->with('error', 'Invalid credentials.');
         }
+        $request->session()->regenerate(); 
+        session(['admin' => $user]);
 
-        return back()->withErrors(['email' => 'Invalid credentials.']);
+        return redirect()->route('admin.dashboard');
     }
 
     public function logout(Request $request)
     {
-        Auth::guard('admin')->logout();
+        $request->session()->forget('admin');
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return redirect()->route('admin.login');
+    }
+
+    public function dashboard()
+    {
+        $today = Carbon::today()->toDateString();
+    
+        $appointmentsToday = Appointment::with(['user', 'schedule'])
+            ->whereHas('schedule', function ($q) use ($today) {
+                $q->whereDate('date', $today);
+            })
+            ->orderBy('schedule_id')
+            ->get();
+
+            $attendancePin = \App\Models\PinCode::where('purpose', 'appointment_attendance')->first();
+            $overridePin = \App\Models\PinCode::where('purpose', 'slot_limit_override')->first();
+    
+            return view('dashboard', compact('appointmentsToday', 'attendancePin', 'overridePin'));
     }
 }

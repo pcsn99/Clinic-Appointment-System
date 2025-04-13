@@ -1,0 +1,36 @@
+@extends('layouts.app')
+
+@section('content')
+    <h2>Edit Schedule</h2>
+
+    @if($errors->any())
+        <ul style="color:red">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    @endif
+
+    <form method="POST" action="{{ route('schedules.update', $schedule) }}">
+        @csrf
+        @method('PUT')
+    
+        <label>Date:
+            <input type="date" name="date" value="{{ old('date', $schedule->date) }}" required>
+        </label><br>
+    
+        <label>Start Time:
+            <input type="time" name="start_time" value="{{ old('start_time', $schedule->start_time) }}" required>
+        </label><br>
+    
+        <label>End Time:
+            <input type="time" name="end_time" value="{{ old('end_time', $schedule->end_time) }}" required>
+        </label><br>
+    
+        <label>Slot Limit:
+            <input type="number" name="slot_limit" value="{{ old('slot_limit', $schedule->slot_limit) }}" required min="1">
+        </label><br>
+    
+        <button type="submit">Update</button>
+    </form>
+@endsection

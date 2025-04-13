@@ -1,14 +1,34 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AdminAuthController;
 
-Route::get('/login', [AdminAuthController::class, 'showLogin'])->name('admin.login');
-Route::post('/login', [AdminAuthController::class, 'login']);
+use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\AdminAppointmentController;
+
+Route::get('/', [AdminAuthController::class, 'showLogin'])->name('admin.login');
+Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
 Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
 Route::middleware('auth.admin')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('admin.dashboard');
+    Route::get('/dashboard', [AdminAuthController::class, 'dashboard'])->name('admin.dashboard');
+
+    Route::resource('schedules', ScheduleController::class)->except(['show']);
+    Route::get('/schedules/bulk-create', [ScheduleController::class, 'showBulkCreate'])->name('schedules.bulk.create');
+    Route::post('/schedules/bulk-create', [ScheduleController::class, 'bulkStore'])->name('schedules.bulk.store');
+    Route::post('/schedules/bulk-delete', [ScheduleController::class, 'bulkDelete'])->name('schedules.bulk.delete');
+
+
+
+    Route::get('/appointments/create', [AdminAppointmentController::class, 'create'])->name('admin.appointments.create');
+    Route::post('/appointments/create', [AdminAppointmentController::class, 'store'])->name('admin.appointments.store');
+    Route::get('/appointments', [AdminAppointmentController::class, 'index'])->name('admin.appointments.index');
+    Route::post('/appointments/{appointment}/mark', [AdminAppointmentController::class, 'mark'])->name('admin.appointments.mark');
+    Route::post('/appointments/bulk-delete', [AdminAppointmentController::class, 'bulkDelete'])->name('admin.appointments.bulkDelete');
+    Route::get('/appointments/calendar-events', [AdminAppointmentController::class, 'calendarEvents']);
+    Route::get('/appointments/schedules-by-date', [AdminAppointmentController::class, 'schedulesByDate']);
+
+
 });
+
