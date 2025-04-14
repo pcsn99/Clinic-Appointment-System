@@ -12,7 +12,7 @@
 
 </head>
 <body>
-    <header class="p-3 border-bottom bg-light">
+    <header class="">
         
         @auth
             <form action="{{ route('logout') }}" method="POST">

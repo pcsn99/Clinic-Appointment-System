@@ -10,7 +10,7 @@
     }
 
     body {
-     background:  url("{{ asset('xubg/xavier.png') }}");
+     background:url("{{ asset('xubg/xavier.png') }}");
      background-size: cover;
      min-height: 100vh;
      display: flex;
@@ -19,10 +19,10 @@
     }
     
     .login-container {
-      background-color: rgba(255, 255, 255, 0.85);
-      padding: 60px 50px;
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 100px 120px;
       border-radius: 30px;
-      max-width: 500px;
+      max-width: 600px;
       width: 100%;
       text-align: center;
       box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
@@ -59,7 +59,6 @@
       font-size: 18px;
       border-radius: 12px;
       cursor: pointer;
-      transition: background 0.3s ease;
     }
 
     .login-btn:hover {
