@@ -10,7 +10,7 @@
     }
 
     body {
-     background:  magpahelp pako;
+     background:  url("{{ asset('xubg/xavier.png') }}");
      background-size: cover;
      min-height: 100vh;
      display: flex;

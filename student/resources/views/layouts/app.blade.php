@@ -13,7 +13,7 @@
 </head>
 <body>
     <header class="p-3 border-bottom bg-light">
-        <h1>Student Clinic Scheduler</h1>
+        
         @auth
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
