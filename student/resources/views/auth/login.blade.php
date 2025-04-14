@@ -54,7 +54,7 @@
       background-color: #1A237E;
       color: white;
       border: none;
-      padding: 14px 0;
+      padding: 10px 0;
       width: 100%;
       font-size: 18px;
       border-radius: 12px;
