@@ -66,8 +66,32 @@
       background-color: #0D153A;
     }
 
-   
-   
+    .register-link {
+    margin-top: 15px;
+    font-size: 14px;
+  }
+
+  .register-link a {
+    color: #1A237E;
+    text-decoration: none;
+  }
+
+  .register-link a:hover {
+    text-decoration: underline;
+  }
+  @media (max-width: 600px) {
+  .login-container {
+    padding: 40px 20px;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+
+  h2 {
+    font-size: 16px;
+  }
+}
 </style>
 
 <div class="login-container">
