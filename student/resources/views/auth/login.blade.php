@@ -20,9 +20,9 @@
     
     .login-container {
       background-color: rgba(255, 255, 255, 0.6);
-      padding: 100px 120px;
+      padding: 60px 40px;
       border-radius: 30px;
-      max-width: 600px;
+      max-width: 400px;
       width: 100%;
       text-align: center;
       box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
@@ -42,12 +42,12 @@
     }
     input[type="text"], input[type="password"] {
       width: 100%;
-      padding: 18px;
-      margin: 12px 0;
+      padding: 8px;
+      margin: 8px 0;
       border: none;
-      border-radius: 12px;
+      border-radius: 10px;
       box-shadow: 0 4px 0 #1A237E;
-      font-size: 16px;
+      font-size: 15px;
     }
 
     .login-btn {
