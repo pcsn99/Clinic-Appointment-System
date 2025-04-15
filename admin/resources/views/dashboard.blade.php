@@ -21,6 +21,11 @@
     <a href="{{ route('admin.appointments.index') }}">
         <button>📋 View Appointments</button>
     </a>
+    <br><br>
+
+    <a href="{{ route('admin.students.index') }}">
+        <button>👥 View Student Accounts</button>
+    </a>
 
     <hr>
 
