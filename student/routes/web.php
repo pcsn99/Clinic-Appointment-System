@@ -16,6 +16,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth.student'])->group(function () {
 
+//Kat added
 Route::get('/dashboard', [StudentDashboardController::class, 'dashboard'])->name('dashboard');
 
 Route::get('/appointments', [StudentAppointmentController::class, 'index'])->name('student.appointments.index');
