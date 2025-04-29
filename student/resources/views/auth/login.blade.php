@@ -67,10 +67,7 @@
         text-decoration: underline;
     }
 
-    .error {
-        color: red;
-        font-size: 14px;
-    }
+
 </style>
 
     <h2>Login</h2>
