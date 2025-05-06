@@ -72,4 +72,40 @@ class AuthController extends Controller
 
         return redirect()->route('login');
     }
+
+    //Kat added function
+    public function profile()
+    {
+        $student = Auth::user();
+        return view('auth.profile', compact('student'));
+    }
+
+    public function editProfile()
+    {
+        $student = Auth::user();
+        return view('auth.profile-edit', compact('student'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $student = Auth::user();
+        
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'course' => 'required|string|max:255',
+            'year' => 'required|string|max:255',
+            'contact_number' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $student->id,
+        ]);
+
+        $student->update($request->only([
+            'name',
+            'course',
+            'year',
+            'contact_number',
+            'email'
+        ]));
+
+        return redirect()->route('dashboard')->with('success', 'Profile updated successfully');
+    }
 }
