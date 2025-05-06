@@ -2,6 +2,15 @@
 
 @section('content')
 <style>
+
+    body {
+        background: url("{{ asset('src/xu.png') }}") no-repeat center center fixed;
+        background-size: cover;
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
     .login-container {
         width: 100%;
         display: flex;
@@ -11,7 +20,7 @@
     }
 
     .login-box {
-        background-color: rgba(186, 211, 252, 0.85);
+        background-color: rgba(180, 208, 252, 0);
         padding: 40px;
         border-radius: 15px;
         box-shadow: 0 0 15px rgba(0,0,0,0.2);
