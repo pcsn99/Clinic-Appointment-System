@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <title>Student Portal</title>
 
-    <!-- Bootstrap CSS (v5) -->
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Your Custom CSS -->
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <style>
-        /* Top Bar */
+        
         header {
             background-color: #17224D;
             color: white;
@@ -21,16 +21,21 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: fixed; 
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
         }
 
-        /* Sidebar (Resized to 200px width) */
         .sidebar {
-            width: 300px; /* Updated width */
+            width: 300px;
             height: 100vh;
             position: fixed;
             background-color: #E0E7F1;
             overflow-y: auto;
             padding: 20px;
+            top: 60px; 
         }
 
         .sidebar ul {
@@ -44,7 +49,7 @@
             justify-content: center;
             flex-direction: column;
             padding: 15px;
-            background-color: #17224D; /* Dark blue buttons */
+            background-color: #17224D;
             border-radius: 20px;
             margin-bottom: 15px;
             color: white;
@@ -63,13 +68,13 @@
             color: white;
         }
 
-        /* Adjust Main Content Position */
+        
         .main-content {
-            margin-left: 200px; /* Match sidebar width */
-            padding: 20px;
+            margin-left: 300px; 
+            padding: 80px 20px 20px; 
         }
 
-        /* Notification Bell */
+      
         .notification-bell img {
             width: 20px;
             height: 20px;
@@ -77,7 +82,7 @@
     </style>
 </head>
 <body>
-    <!-- Top Bar -->
+
     <header>
         @auth
             <div class="d-flex align-items-center ms-auto">
@@ -94,7 +99,7 @@
 
     <div class="d-flex">
         @auth
-        <!-- Sidebar (Fixed, Now 200px Wide) -->
+        
         <nav class="sidebar p-3 border-end">
             <ul class="nav flex-column">
                 <li class="nav-item">
