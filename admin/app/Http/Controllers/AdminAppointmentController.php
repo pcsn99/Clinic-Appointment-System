@@ -7,8 +7,11 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Schedule;
 use App\Models\Appointment;
+use App\Models\Notification;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AdminAppointmentController extends Controller
 {
@@ -59,6 +62,13 @@ class AdminAppointmentController extends Controller
             'status' => 'booked',
         ]);
 
+        Notification::create([
+            'notifiable_id' => $request->user_id,
+            'notifiable_type' => 'App\Models\User',
+            'title' => 'Appointment Booked by Admin',
+            'message' => 'You have been booked for an appointment by the clinic.',
+        ]);
+
         return redirect()->route('admin.dashboard')->with('success', 'Appointment booked successfully.');
     }
 
@@ -66,18 +76,8 @@ class AdminAppointmentController extends Controller
 
     public function index()
     {
-        // cancel past unmarked appointments
-        $pastAppointments = Appointment::whereHas('schedule', function ($query) {
-            $query->where('end_time', '<', now()->format('H:i'))
-                  ->whereDate('date', now());
-        })->where('is_present', false)->get();
+        $this->handleSmartRescheduling(); 
     
-        foreach ($pastAppointments as $appt) {
-            $appt->status = 'cancelled';
-            $appt->save();
-        }
-    
-        
         $appointments = Appointment::join('schedules', 'appointments.schedule_id', '=', 'schedules.id')
             ->join('users', 'appointments.user_id', '=', 'users.id')
             ->whereDate('schedules.date', '>=', now()->toDateString())
@@ -87,18 +87,9 @@ class AdminAppointmentController extends Controller
             ->with(['user', 'schedule'])
             ->get();
     
-        return view('appointments.index', [
-            'appointments' => $appointments
-        ]);
+        return view('appointments.index', compact('appointments'));
     }
-    
-    
-    
-    
-    
-    
-    
-
+  
     public function mark(Request $request, Appointment $appointment)
     {
         $value = filter_var($request->input('is_present'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
@@ -110,6 +101,15 @@ class AdminAppointmentController extends Controller
         $appointment->is_present = $value;
         $appointment->status = $value ? 'completed' : 'booked';
         $appointment->save();
+
+        Notification::create([
+            'notifiable_id' => $appointment->user_id,
+            'notifiable_type' => 'App\Models\User',
+            'title' => $value ? 'Marked Present' : 'Attendance Reverted',
+            'message' => $value 
+                ? 'You have been marked as present by the clinic.'
+                : 'Your attendance status was reverted by the clinic.',
+        ]);
     
         return back()->with('success', 'Attendance updated.');
     }
@@ -174,4 +174,68 @@ class AdminAppointmentController extends Controller
         return response()->json($schedules);
     }
     
+
+    protected function handleSmartRescheduling()
+    {
+        $now = now();
+        $today = $now->toDateString();
+    
+        $absentAppointments = Appointment::whereHas('schedule', function ($query) use ($now, $today) {
+                $query->whereDate('date', $today)
+                    ->where('end_time', '<', $now->format('H:i'));
+            })
+            ->where('is_present', false)
+            ->where('status', 'booked')
+            ->with(['user', 'schedule'])
+            ->get();
+    
+        Log::info("🟡 Starting smart rescheduling at {$now->toDateTimeString()} | Found {$absentAppointments->count()} absent appointment(s)");
+    
+        foreach ($absentAppointments as $appointment) {
+            $user = $appointment->user;
+            $originalSchedule = $appointment->schedule;
+    
+            Log::info("⏱ Checking appointment for user: {$user->name} | Scheduled at: {$originalSchedule->start_time} - {$originalSchedule->end_time}");
+    
+            // Look for later available schedule
+            $available = Schedule::whereDate('date', $today)
+                ->where('start_time', '>', $originalSchedule->end_time)
+                ->withCount('appointments')
+                ->get()
+                ->firstWhere(function ($sched) {
+                    return $sched->appointments_count < $sched->slot_limit;
+                });
+    
+            if ($available) {
+                $appointment->schedule_id = $available->id;
+                $appointment->save();
+    
+                Log::info("✅ Rebooked user '{$user->name}' to new time slot: {$available->start_time} - {$available->end_time}");
+    
+                Notification::create([
+                    'notifiable_id' => $user->id,
+                    'notifiable_type' => 'App\Models\User',
+                    'title' => 'Rebooked Due to Absence',
+                    'message' => "You missed your appointment and have been rebooked today at {$available->start_time} - {$available->end_time}.",
+                ]);
+            } else {
+                $appointment->status = 'cancelled';
+                $appointment->save();
+    
+                Log::warning("❌ Could not rebook '{$user->name}' - all slots full. Appointment cancelled.");
+    
+                Notification::create([
+                    'notifiable_id' => $user->id,
+                    'notifiable_type' => 'App\Models\User',
+                    'title' => 'Appointment Cancelled',
+                    'message' => "You missed your appointment and all other slots today are full. Please rebook.",
+                ]);
+            }
+        }
+    
+        Log::info("✅ Smart rescheduling complete.");
+    }
+    
+
+
 }

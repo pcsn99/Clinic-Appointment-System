@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\PinCode;
+
 use App\Models\Schedule;
 use App\Models\Appointment;
+use App\Models\Notification;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StudentAppointmentController extends Controller
 {
@@ -79,7 +82,7 @@ class StudentAppointmentController extends Controller
 
         $userId = Auth::id();
 
-        // Restrict if already booked
+        
         $existing = Appointment::where('user_id', $userId)->first();
         if ($existing) {
             return back()->with('error', 'You already have a booking. Please cancel it first.');
@@ -87,15 +90,30 @@ class StudentAppointmentController extends Controller
 
         $schedule = Schedule::withCount('appointments')->findOrFail($request->schedule_id);
 
-        if ($schedule->appointments_count >= $schedule->slot_limit) {
-            // TODO: Validate pin here
-            return back()->with('error', 'Slot is full. Please enter valid PIN to override.');
+        $isFull = $schedule->appointments_count >= $schedule->slot_limit;
+        if ($isFull) {
+            $validPin = PinCode::where('purpose', 'slot_limit_override')
+                ->where('type', 'hourly')
+                ->whereDate('created_at', now())
+                ->orderByDesc('created_at')
+                ->first();
+    
+            if (!$validPin || $validPin->pin_code !== $request->pin) {
+                return back()->with('error', 'Slot is full. Please enter a valid PIN to override.');
+            }
         }
 
         Appointment::create([
             'user_id' => $userId,
             'schedule_id' => $schedule->id,
             'status' => 'booked',
+        ]);
+
+        Notification::create([
+            'notifiable_type' => 'App\Models\User',
+            'notifiable_id' => $userId,
+            'title' => 'Appointment Booked',
+            'message' => "Your appointment has been successfully booked for {$schedule->date} at {$schedule->start_time}.",
         ]);
 
         return back()->with('success', 'Appointment successfully booked.');
@@ -108,6 +126,13 @@ class StudentAppointmentController extends Controller
         if ($appt->is_present) {
             return back()->with('error', 'Cannot cancel an appointment already marked as present.');
         }
+
+        Notification::create([
+            'notifiable_type' => 'App\Models\User',
+            'notifiable_id' => Auth::id(),
+            'title' => 'Appointment Cancelled',
+            'message' => 'Your appointment has been cancelled.',
+        ]);
 
         $appt->delete();
 
@@ -130,7 +155,7 @@ class StudentAppointmentController extends Controller
         $schedule = Schedule::withCount('appointments')->findOrFail($request->schedule_id);
 
         if ($schedule->appointments_count >= $schedule->slot_limit) {
-            // TODO: Validate pin here
+            // TODO: Validate pin 
             return back()->with('error', 'Slot is full. Please enter valid PIN to override.');
         }
 
@@ -159,6 +184,13 @@ class StudentAppointmentController extends Controller
         $appointment->update([
             'is_present' => true,
             'status' => 'completed'
+        ]);
+
+        Notification::create([
+            'notifiable_type' => 'App\Models\User',
+            'notifiable_id' => $appointment->user_id,
+            'title' => 'Marked Present',
+            'message' => 'You have been successfully marked as present.',
         ]);
 
         return back()->with('success', 'You have been marked as present.');

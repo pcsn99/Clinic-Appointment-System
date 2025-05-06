@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\StudentDashboardController;
 use App\Http\Controllers\StudentAppointmentController;
 
@@ -31,5 +32,8 @@ Route::post('/appointments/{appointment}/mark-present', [StudentAppointmentContr
 Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
 Route::get('/profile/edit', [AuthController::class, 'editProfile'])->name('profile.edit');
 Route::put('/profile/update', [AuthController::class, 'updateProfile'])->name('profile.update');
+
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
 
 });
