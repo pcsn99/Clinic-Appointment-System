@@ -13,7 +13,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <style>
-       
+        /* Top Bar */
         header {
             background-color: #17224D;
             color: white;
@@ -23,73 +23,64 @@
             align-items: center;
         }
 
-        
+        /* Sidebar (Resized to 200px width) */
         .sidebar {
-            width: 250px;
+            width: 300px; /* Updated width */
             height: 100vh;
             position: fixed;
-            background-color: #17224D !important;
-            transition: width 0.3s;
-            overflow: hidden;
-        }
-
-        .sidebar.collapsed {
-            width: 70px;
+            background-color: #E0E7F1;
+            overflow-y: auto;
+            padding: 20px;
         }
 
         .sidebar ul {
             padding: 0;
+            list-style-type: none;
         }
 
         .sidebar .nav-link {
             display: flex;
             align-items: center;
-            padding: 10px;
-            color: white !important;
+            justify-content: center;
+            flex-direction: column;
+            padding: 15px;
+            background-color: #17224D; /* Dark blue buttons */
+            border-radius: 20px;
+            margin-bottom: 15px;
+            color: white;
             text-decoration: none;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
         }
 
         .sidebar .nav-link img {
             width: 30px;
-            margin-right: 10px;
+            margin-bottom: 10px;
         }
 
-        .sidebar.collapsed .nav-link span {
-            display: none;
-        }
-
-     
-        .toggle-btn {
-            background-color: #17224D !important;
+        .sidebar .nav-link span {
             color: white;
-            border: none;
-            padding: 10px 15px;
-            cursor: pointer;
-            font-size: 18px;
         }
 
-       
+        /* Adjust Main Content Position */
         .main-content {
-            margin-left: 250px;
-            transition: margin-left 0.3s;
+            margin-left: 200px; /* Match sidebar width */
+            padding: 20px;
         }
 
-        .collapsed + .main-content {
-            margin-left: 80px;
-        }
-
+        /* Notification Bell */
         .notification-bell img {
-            width: 20px; 
+            width: 20px;
             height: 20px;
         }
     </style>
 </head>
 <body>
-    <header class="d-flex justify-content-between align-items-center">
-        <button id="toggleSidebar" class="toggle-btn">☰</button>
-
+    <!-- Top Bar -->
+    <header>
         @auth
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center ms-auto">
                 <a class="nav-link notification-bell" href="#">
                     <img src="{{ asset('icons/Bell2.png') }}" alt="Notifications">
                 </a>
@@ -103,7 +94,8 @@
 
     <div class="d-flex">
         @auth
-        <nav id="sidebar" class="sidebar p-3 border-end">
+        <!-- Sidebar (Fixed, Now 200px Wide) -->
+        <nav class="sidebar p-3 border-end">
             <ul class="nav flex-column">
                 <li class="nav-item">
                     <a class="nav-link" href="#">
@@ -127,20 +119,14 @@
         </nav>
         @endauth
 
-    
-        <main id="main-content" class="main-content p-4 flex-grow-1">
+        <!-- Main Content -->
+        <main class="main-content flex-grow-1">
             @yield('content')
         </main>
     </div>
 
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        document.getElementById('toggleSidebar').addEventListener('click', function() {
-            document.getElementById('sidebar').classList.toggle('collapsed');
-            document.getElementById('main-content').classList.toggle('collapsed');
-        });
-    </script>
 
     @stack('scripts') 
 </body>
