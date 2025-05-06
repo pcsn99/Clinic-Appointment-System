@@ -12,9 +12,7 @@
             <p class="alert alert-danger fs-5">{{ session('error') }}</p>
         @endif
 
-        <div class="text-center mb-4">
-            <a href="{{ route('dashboard') }}" class="btn btn-primary btn-lg action-btn">🏠 Back to Dashboard</a>
-        </div>
+       
     </div>
 
     @if($existingBooking)
@@ -41,6 +39,7 @@
                 <button type="submit" class="btn btn-danger btn-lg action-btn">Cancel Appointment</button>
             </form>
         @endif
+       
     </div>
     @endif
 
@@ -51,7 +50,7 @@
         <div id="slotDetails" class="mt-4 fs-4"></div>
     </div>
 
-    <!-- Booking Modal -->
+
     <div class="modal fade" id="bookingModal" tabindex="-1">
         <div class="modal-dialog">
             <form method="POST" action="{{ route('student.appointments.book') }}">
@@ -145,8 +144,14 @@
 
             const modal = new bootstrap.Modal(document.getElementById('bookingModal'));
             modal.show();
+
+        
         }
     </script>
+</div>
+
+<div class="text-center mb-4">
+    <a href="{{ route('dashboard') }}" class="btn btn-primary btn-lg action-btn">Back to Dashboard</a>
 </div>
 
 <style>
