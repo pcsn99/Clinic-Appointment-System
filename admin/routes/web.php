@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\Admin\LogViewerController;
 use App\Http\Controllers\AdminAppointmentController;
 
 Route::get('/', [AdminAuthController::class, 'showLogin'])->name('admin.login');
@@ -29,6 +30,6 @@ Route::middleware('auth.admin')->group(function () {
     Route::get('/appointments/calendar-events', [AdminAppointmentController::class, 'calendarEvents']);
     Route::get('/appointments/schedules-by-date', [AdminAppointmentController::class, 'schedulesByDate']);
 
-
+    Route::get('/admin/logs', [LogViewerController::class, 'index'])->name('admin.logs');
 });
 
