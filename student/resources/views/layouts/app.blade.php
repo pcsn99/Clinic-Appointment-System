@@ -68,8 +68,11 @@
         }
 
         .main-content {
-            margin-left: 300px; 
             padding: 80px 20px 20px; 
+        }
+        
+        .main-content-with-sidebar {
+            margin-left: 300px;
         }
 
         #notificationBell img {
@@ -102,37 +105,45 @@
         @endauth
     </header>
 
+    @auth
+    <!-- Layout for authenticated users -->
     <div class="d-flex">
-        @auth
-            <nav class="sidebar p-3 border-end">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <img src="{{ asset('icons/Dashboard.png') }}" alt="Dashboard"> 
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <img src="{{ asset('icons/Profile.png') }}" alt="Account"> 
-                            <span>Account</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <img src="{{ asset('icons/print.png') }}" alt="Print Form"> 
-                            <span>Print Form</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        @endauth
+        <nav class="sidebar p-3 border-end">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('dashboard') }}">
+                        <img src="{{ asset('icons/Dashboard.png') }}" alt="Dashboard"> 
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('account.show') }}">
+                        <img src="{{ asset('icons/Profile.png') }}" alt="Account"> 
+                        <span>Account</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <img src="{{ asset('icons/print.png') }}" alt="Print Form"> 
+                        <span>Print Form</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
 
-        <!-- Main Content -->
-        <main class="main-content flex-grow-1">
+        <!-- Main Content for authenticated users -->
+        <main class="main-content flex-grow-1 main-content-with-sidebar">
             @yield('content')
         </main>
     </div>
+    @else
+    <!-- Layout for guests (login/register) -->
+    <div>
+        <main class="main-content">
+            @yield('content')
+        </main>
+    </div>
+    @endauth
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
