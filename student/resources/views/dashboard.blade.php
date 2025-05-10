@@ -85,7 +85,7 @@
 
 <div class="container mt-5">
     <div class="card info-card">
-        <h2 class="text-primary fw-bold display-4">Welcome, {{ Auth::user()->name }}</h2>
+        <h2 class="fw-bold display-4 welcome-heading">Welcome, {{ Auth::user()->name }}</h2>
         <div class="info-section fs-4">
             <p><strong>Username:</strong> {{ Auth::user()->username }}</p>
             <p><strong>Email:</strong> {{ Auth::user()->email }}</p>
@@ -97,7 +97,7 @@
 
     @if($currentBooking)
     <div class="card appointment-card">
-        <h4 class="fw-bold text-info display-5">Current Appointment</h4>
+        <h4 class="fw-bold display-5 current-appointment">Current Appointment</h4>
         <div class="appointment-details fs-4">
             <p><strong>Date:</strong> {{ $currentBooking->schedule->date }}</p>
             <p><strong>Time:</strong> {{ $currentBooking->schedule->start_time }} - {{ $currentBooking->schedule->end_time }}</p>
@@ -110,12 +110,6 @@
         @elseif($currentBooking->is_present)
             <button class="btn btn-primary action-btn btn-lg" disabled>Upload Certificate (Coming Soon)</button>
         @endif
-    </div>
-    @endif
-
-    @if(!$currentBooking || !$currentBooking->is_present)
-    <div class="text-center my-4">
-        <a href="{{ route('student.appointments.index') }}" class="btn btn-primary btn-lg action-btn">Book Appointment</a>
     </div>
     @endif
 
@@ -132,6 +126,12 @@
                     </li>
                 @endforeach
             </ul>
+        @endif
+
+        @if(!$currentBooking || !$currentBooking->is_present)
+        <div class="text-center my-4">
+            <a href="{{ route('student.appointments.index') }}" class="btn btn-primary btn-lg action-btn">Book Appointment</a>
+        </div>
         @endif
     </div>
 
@@ -173,13 +173,13 @@
 
 <style>
     .container {
-        max-width: 1000px; 
+        max-width: 1000px;
     }
 
     .card {
         border: none;
         border-radius: 12px;
-        padding: 40px; 
+        padding: 40px;
         margin-bottom: 30px;
         background-color: #f8f9fa;
     }
@@ -201,7 +201,7 @@
     }
 
     .info-section, .appointment-details {
-        font-size: 22px; 
+        font-size: 22px;
         color: #333;
     }
 
@@ -214,7 +214,7 @@
     .action-btn {
         width: 100%;
         padding: 16px;
-        font-size: 20px; 
+        font-size: 20px;
         font-weight: bold;
         border-radius: 12px;
     }
@@ -230,13 +230,23 @@
     }
 
     .btn-success {
-        background-color: #28a745;
-        border-color: #28a745;
+        background-color: #17224D;
     }
 
     .btn-secondary {
         background-color: #6c757d;
         border-color: #6c757d;
     }
+
+    .welcome-heading {
+        color: #17224D;
+    }
+
+    .current-appointment {
+        color: #17224D;
+    }
 </style>
+
+
+@endsection
 
