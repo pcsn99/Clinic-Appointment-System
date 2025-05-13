@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
-@section('body_background', "url('" . asset('xubg/xavier.jpg') . "') no-repeat center center fixed")
-
+@section('body_background', "url('" . asset('src/xu.png') . "') no-repeat center center fixed")
 
 @section('content')
 
