@@ -8,6 +8,7 @@ class LogViewerController extends Controller
 {
     public function index()
     {
+
         //dd();
         $adminLogPath = storage_path('logs/laravel.log');
         $studentLogPath = base_path('../student/storage/logs/laravel.log');
@@ -28,3 +29,4 @@ class LogViewerController extends Controller
         return view('admin.logs', compact('adminLogs', 'studentLogs', 'healthLogs'));
     }
 }
+

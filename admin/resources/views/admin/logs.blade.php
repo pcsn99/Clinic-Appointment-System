@@ -2,7 +2,9 @@
 
 @section('content')
 <div class="container">
-    <h2>ystem Logs Viewer</h2>
+
+    <h2>System Logs Viewer</h2>
+
 
     <h4 class="mt-4">Admin System Log</h4>
     <pre style="background:#111;color:#eee;padding:1rem;border-radius:8px;max-height:300px;overflow:auto;">
@@ -18,9 +20,6 @@
         @endforeach
     </pre>
 
-
-
-
     <h4 class="mt-4">System Health Log</h4>
         <pre style="background:#111;color:#eee;padding:1rem;border-radius:8px;max-height:300px;overflow:auto;">
             @foreach($healthLogs as $line)
@@ -30,3 +29,4 @@
 
 </div>
 @endsection
+
