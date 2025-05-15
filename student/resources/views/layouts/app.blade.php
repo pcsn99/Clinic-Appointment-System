@@ -13,6 +13,80 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <style>
+<<<<<<< HEAD
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+     .login-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top: 60px;
+    }
+
+    .login-box {
+        background-color: rgba(180, 208, 252, 0.85);
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .login-box h2 {
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .login-box p {
+        margin-bottom: 30px;
+        color: #555;
+    }
+
+    .login-box input {
+        width: 100%;
+        padding: 12px 15px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        font-size: 16px;
+    }
+
+    .btn {
+        background-color: #1f3c88;
+        color: white;
+        border: none;
+        padding: 12px;
+        width: 100%;
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .btn:hover {
+        background-color: #162c63;
+    }
+
+    .bottom-text {
+        margin-top: 15px;
+    }
+
+    .bottom-text a {
+        color: #1f3c88;
+        text-decoration: none;
+    }
+
+    .bottom-text a:hover {
+        text-decoration: underline;
+    }
+        
+=======
+>>>>>>> 3516d6c87ae3ebeb67a2a56db5cfcff47d4f4729
         header {
             background-color: #17224D;
             color: white;
@@ -68,8 +142,11 @@
         }
 
         .main-content {
-            margin-left: 300px; 
             padding: 80px 20px 20px; 
+        }
+        
+        .main-content-with-sidebar {
+            margin-left: 300px;
         }
 
         #notificationBell img {
@@ -78,8 +155,10 @@
         }
     </style>
 </head>
-<body>
+<body style="@hasSection('body_background') background: @yield('body_background'); background-size: cover; @endif">
 
+<body>
+ 
     <header>
         @auth
             <div class="d-flex align-items-center ms-auto">
@@ -102,37 +181,45 @@
         @endauth
     </header>
 
+    @auth
+    <!-- Layout for authenticated users -->
     <div class="d-flex">
-        @auth
-            <nav class="sidebar p-3 border-end">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <img src="{{ asset('icons/Dashboard.png') }}" alt="Dashboard"> 
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <img src="{{ asset('icons/Profile.png') }}" alt="Account"> 
-                            <span>Account</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <img src="{{ asset('icons/print.png') }}" alt="Print Form"> 
-                            <span>Print Form</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        @endauth
+        <nav class="sidebar p-3 border-end">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('dashboard') }}">
+                        <img src="{{ asset('icons/Dashboard.png') }}" alt="Dashboard"> 
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('account.show') }}">
+                        <img src="{{ asset('icons/Profile.png') }}" alt="Account"> 
+                        <span>Account</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <img src="{{ asset('icons/print.png') }}" alt="Print Form"> 
+                        <span>Print Form</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
 
-        <!-- Main Content -->
-        <main class="main-content flex-grow-1">
+        <!-- Main Content for authenticated users -->
+        <main class="main-content flex-grow-1 main-content-with-sidebar">
             @yield('content')
         </main>
     </div>
+    @else
+    <!-- Layout for guests (login/register) -->
+    <div>
+        <main class="main-content">
+            @yield('content')
+        </main>
+    </div>
+    @endauth
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
