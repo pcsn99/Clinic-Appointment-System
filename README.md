@@ -37,13 +37,20 @@ This part covers how to install **PHP, Composer,** and **Laravel** for both Linu
     composer --version
    ```
 
-5. **Install Laravel installer globally**
+5. **Install mysql**
+
+   ```bash
+    sudo apt install mysql-server -y
+    sudo mysql_secure_installation
+   ```
+
+6. **Install Laravel installer globally**
 
    ```bash
     composer global require laravel/installer
    ```
 
-6. **Add Laravel to PATH**
+7. **Add Laravel to PATH**
 
    ```bash
     echo 'export PATH="$HOME/.composer/vendor/bin:$PATH"' >> ~/.bashrc
