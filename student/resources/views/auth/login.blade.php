@@ -3,25 +3,41 @@
 @section('body_background', "url('" . asset('src/xu.png') . "') no-repeat center center fixed")
 
 @section('content')
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-header text-center" style="background-color: #17224D; color: white;">
+                    <h2>Hello!<br>Welcome Back!</h2>
+                    <p class="mb-0">Let's Login to Your Account</p>
+                </div>
+                <div class="card-body p-4">
+                    @if($errors->any())
+                        <div class="alert alert-danger">
+                            {{ $errors->first() }}
+                        </div>
+                    @endif
 
-<div class="login-container">
-    <div class="login-box">
-        <h2>Hello!<br>Welcome Back!</h2>
-        <p>Let's Login to Your Account</p>
+                    <form method="POST" action="{{ route('login') }}">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="login" class="form-label">Email or Username</label>
+                            <input type="text" class="form-control" id="login" name="login" placeholder="Enter email or username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary" style="background-color: #17224D;">Login</button>
+                        </div>
+                    </form>
 
-        @if($errors->any())
-            <p class="error">{{ $errors->first() }}</p>
-        @endif
-
-        <form method="POST" action="{{ route('login') }}">
-            @csrf
-            <input type="text" name="login" placeholder="Email or Username" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit" class="btn">Login</button>
-        </form>
-
-        <div class="bottom-text">
-            <p>Don’t have an account? <a href="{{ route('register') }}">Register here</a></p>
+                    <div class="mt-3 text-center">
+                        <p class="mb-0">Don’t have an account? <a href="{{ route('register') }}" class="text-decoration-none">Register here</a></p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
