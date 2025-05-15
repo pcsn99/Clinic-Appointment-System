@@ -13,6 +13,80 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <style>
+<<<<<<< HEAD
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+     .login-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top: 60px;
+    }
+
+    .login-box {
+        background-color: rgba(180, 208, 252, 0.85);
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .login-box h2 {
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .login-box p {
+        margin-bottom: 30px;
+        color: #555;
+    }
+
+    .login-box input {
+        width: 100%;
+        padding: 12px 15px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        font-size: 16px;
+    }
+
+    .btn {
+        background-color: #1f3c88;
+        color: white;
+        border: none;
+        padding: 12px;
+        width: 100%;
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .btn:hover {
+        background-color: #162c63;
+    }
+
+    .bottom-text {
+        margin-top: 15px;
+    }
+
+    .bottom-text a {
+        color: #1f3c88;
+        text-decoration: none;
+    }
+
+    .bottom-text a:hover {
+        text-decoration: underline;
+    }
+        
+=======
+>>>>>>> 3516d6c87ae3ebeb67a2a56db5cfcff47d4f4729
         header {
             background-color: #17224D;
             color: white;
@@ -81,8 +155,10 @@
         }
     </style>
 </head>
-<body>
+<body style="@hasSection('body_background') background: @yield('body_background'); background-size: cover; @endif">
 
+<body>
+ 
     <header>
         @auth
             <div class="d-flex align-items-center ms-auto">
