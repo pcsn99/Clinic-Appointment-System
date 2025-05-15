@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\Admin\LogViewerController;
 use App\Http\Controllers\AdminAppointmentController;
+use App\Http\Controllers\WalkinNotificationController;
 
 Route::get('/', [AdminAuthController::class, 'showLogin'])->name('admin.login');
 Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
@@ -29,6 +30,9 @@ Route::middleware('auth.admin')->group(function () {
     Route::post('/appointments/bulk-delete', [AdminAppointmentController::class, 'bulkDelete'])->name('admin.appointments.bulkDelete');
     Route::get('/appointments/calendar-events', [AdminAppointmentController::class, 'calendarEvents']);
     Route::get('/appointments/schedules-by-date', [AdminAppointmentController::class, 'schedulesByDate']);
+
+    Route::get('/walkin-notifications', [WalkinNotificationController::class, 'create'])->name('admin.walkin.create');
+    Route::post('/walkin-notifications', [WalkinNotificationController::class, 'store'])->name('admin.walkin.store');
 
     Route::get('/admin/logs', [LogViewerController::class, 'index'])->name('admin.logs');
 });
