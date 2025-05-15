@@ -115,11 +115,12 @@ sudo apt install git -y
 ```
 
 1. **Clone the repository**
+   
 ```bash
 cd https://github.com/pcsn99/Clinic-Appointment-System.git
 ```
 
-2 **Install dependencies in both folders**
+2. **Install dependencies in both folders**
 
 ```bash
 cd admin
