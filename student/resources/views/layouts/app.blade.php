@@ -13,6 +13,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <style>
+<<<<<<< HEAD
     body {
         margin: 0;
         padding: 0;
@@ -84,6 +85,8 @@
         text-decoration: underline;
     }
         
+=======
+>>>>>>> 3516d6c87ae3ebeb67a2a56db5cfcff47d4f4729
         header {
             background-color: #17224D;
             color: white;
@@ -138,14 +141,12 @@
             color: white;
         }
 
-        
         .main-content {
             margin-left: 300px; 
             padding: 80px 20px 20px; 
         }
 
-      
-        .notification-bell img {
+        #notificationBell img {
             width: 20px;
             height: 20px;
         }
@@ -158,10 +159,18 @@
     <header>
         @auth
             <div class="d-flex align-items-center ms-auto">
-                <a class="nav-link notification-bell" href="#">
-                    <img src="{{ asset('icons/Bell2.png') }}" alt="Notifications">
-                </a>
-                <form action="{{ route('logout') }}" method="POST" class="ms-3">
+                <div style="position: relative;" id="notification-wrapper" class="me-3">
+                    <button id="notificationBell" style="background: none; border: none; position: relative;">
+                        <img src="{{ asset('icons/Bell2.png') }}" alt="Notifications">
+                        <span id="notificationCount" class="badge bg-danger" style="position: absolute; top: -5px; right: -10px; font-size: 12px;"></span>
+                    </button>
+
+                    <div id="notificationDropdown" style="display: none; position: absolute; top: 30px; right: 0; background: white; border: 1px solid #ccc; width: 300px; z-index: 1000;">
+                        <ul id="notificationList" class="list-group list-group-flush" style="max-height: 300px; overflow-y: auto;"></ul>
+                    </div>
+                </div>
+
+                <form action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button type="submit" class="btn btn-sm btn-danger">Logout</button>
                 </form>
@@ -171,29 +180,28 @@
 
     <div class="d-flex">
         @auth
-        
-        <nav class="sidebar p-3 border-end">
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <img src="{{ asset('icons/Dashboard.png') }}" alt="Dashboard"> 
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <img src="{{ asset('icons/Profile.png') }}" alt="Account"> 
-                        <span>Account</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <img src="{{ asset('icons/print.png') }}" alt="Print Form"> 
-                        <span>Print Form</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+            <nav class="sidebar p-3 border-end">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <img src="{{ asset('icons/Dashboard.png') }}" alt="Dashboard"> 
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <img src="{{ asset('icons/Profile.png') }}" alt="Account"> 
+                            <span>Account</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <img src="{{ asset('icons/print.png') }}" alt="Print Form"> 
+                            <span>Print Form</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         @endauth
 
         <!-- Main Content -->
@@ -202,8 +210,46 @@
         </main>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const bell = document.getElementById('notificationBell');
+            const dropdown = document.getElementById('notificationDropdown');
+            const list = document.getElementById('notificationList');
+            const countBadge = document.getElementById('notificationCount');
+
+            bell.addEventListener('click', () => {
+                dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+            });
+
+            function loadNotifications() {
+                fetch('/notifications')
+                    .then(response => response.json())
+                    .then(data => {
+                        list.innerHTML = '';
+                        let unreadCount = 0;
+
+                        data.forEach(n => {
+                            const item = document.createElement('li');
+                            item.className = 'list-group-item';
+                            item.innerHTML = `<strong>${n.title}</strong><br><small>${n.message}</small>`;
+                            if (!n.is_read) unreadCount++;
+                            item.addEventListener('click', () => {
+                                fetch(`/notifications/${n.id}/read`, {
+                                    method: 'POST',
+                                    headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') }
+                                }).then(() => loadNotifications());
+                            });
+                            list.appendChild(item);
+                        });
+
+                        countBadge.textContent = unreadCount > 0 ? unreadCount : '';
+                    });
+            }
+
+            loadNotifications();
+            setInterval(loadNotifications, 30000); 
+        });
+    </script>
 
     @stack('scripts') 
 </body>
