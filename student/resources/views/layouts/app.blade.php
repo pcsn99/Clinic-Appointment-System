@@ -123,14 +123,7 @@
                         <img src="{{ asset('icons/Profile.png') }}" alt="Account"> 
                         <span>Account</span>
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <img src="{{ asset('icons/print.png') }}" alt="Print Form"> 
-                        <span>Print Form</span>
-                    </a>
-                </li>
-            </ul>
+               
         </nav>
 
         <!-- Main Content for authenticated users -->
