@@ -7,7 +7,11 @@ use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\Admin\LogViewerController;
 use App\Http\Controllers\AdminAppointmentController;
+
+use App\Http\Controllers\Admin\LogViewerController;
+
 use App\Http\Controllers\WalkinNotificationController;
+
 
 Route::get('/', [AdminAuthController::class, 'showLogin'])->name('admin.login');
 Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
@@ -33,6 +37,7 @@ Route::middleware('auth.admin')->group(function () {
 
     Route::get('/walkin-notifications', [WalkinNotificationController::class, 'create'])->name('admin.walkin.create');
     Route::post('/walkin-notifications', [WalkinNotificationController::class, 'store'])->name('admin.walkin.store');
+
 
     Route::get('/admin/logs', [LogViewerController::class, 'index'])->name('admin.logs');
 });
