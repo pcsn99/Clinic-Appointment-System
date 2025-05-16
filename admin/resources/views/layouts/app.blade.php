@@ -16,6 +16,7 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+
     <style>
         header {
             background-color: #17224D;
@@ -65,6 +66,9 @@
             margin-left: 20px;
         }
     </style>
+
+    
+
 </head>
 <body>
     <header>

@@ -5,6 +5,7 @@
 @section('content')
 <style>
     body {
+
         /* Set background image directly */
         background-image: url('../../src/xu.png');
         background-repeat: no-repeat;
@@ -16,6 +17,12 @@
         justify-content: center;
     }
     
+        position: relative;
+        background: url('{{ asset('src/xu.png') }}') no-repeat center center fixed;
+        background-size: cover;
+    }
+
+
     body::before {
         content: "";
         position: fixed;
@@ -26,6 +33,7 @@
         background: rgba(255, 255, 255, 0.3);
         z-index: -1;
     }
+
     
     .login-container {
         width: 100%;
@@ -74,3 +82,42 @@
     </div>
 </div>
 @endsection
+
+</style>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-header text-center" style="background-color: #17224D; color: white;">
+                    <h2>Admin Login</h2>
+                    <p class="mb-0">Sign in to manage the portal</p>
+                </div>
+                <div class="card-body p-4">
+                    @if(session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+
+                    <form method="POST" action="{{ route('admin.login.submit') }}">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary" style="background-color: #17224D;">Login</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
