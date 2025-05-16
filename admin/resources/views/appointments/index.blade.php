@@ -1,11 +1,27 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container" style="max-width: 1200px;">
-        {{-- Styled Title Box --}}
-        <div class="text-center mb-4 p-3 rounded" style="background-color: #162163; color: white; font-weight: bold; font-size: 24px;">
-            Upcoming Appointments
+<style>
+    .appointments-container {
+        width: 900px;
+        margin: 0 auto;
+    }
+    .appointments-header {
+        background-color: #17224D;
+        color: white;
+        text-align: center;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="appointments-container">
+    <div class="card shadow-lg mb-4">
+        <div class="card-header text-center text-white" style="background-color: #17224D;">
+            <h2 class="fw-bold display-5 my-2">Upcoming Appointments</h2>
         </div>
+        <div class="card-body p-4">
 
         {{-- Row Layout for Calendar and Table --}}
         <div class="row">
@@ -30,6 +46,21 @@
                         <div class="alert alert-danger text-center">{{ session('error') }}</div>
                     @endif
 
+                    <div class="mb-2 d-flex justify-content-between align-items-center">
+                        <div>
+                            <span>Show </span>
+                            <select id="appointmentsPerPage" class="form-select form-select-sm d-inline-block w-auto">
+                                <option value="4" selected>4</option>
+                                <option value="8">8</option>
+                                <option value="12">12</option>
+                            </select>
+                            <span> entries</span>
+                        </div>
+                        <div>
+                            <span id="paginationInfo">Showing 0 to 0 of 0 entries</span>
+                        </div>
+                    </div>
+                    
                     <table class="table table-bordered">
                         <thead class="text-white text-center" style="background-color: #162163;">
                             <tr>
@@ -46,10 +77,24 @@
                             </tr>
                         </tbody>
                     </table>
+                    
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <button id="prevPage" class="btn btn-sm btn-secondary" disabled>
+                            <i class="bi bi-chevron-left"></i> Previous
+                        </button>
+                        <div id="paginationPages" class="btn-group">
+                            <!-- Page buttons will be inserted here -->
+                        </div>
+                        <button id="nextPage" class="btn btn-sm btn-secondary" disabled>
+                            Next <i class="bi bi-chevron-right"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
+        </div>
     </div>
+</div>
 
     {{-- 📆 FullCalendar Script --}}
     <script>
@@ -72,31 +117,105 @@
                         .then(appointments => {
                             if (!Array.isArray(appointments) || appointments.length === 0) {
                                 document.getElementById('appointmentsTable').innerHTML = '<tr><td colspan="5" class="text-center text-muted">No appointments found.</td></tr>';
+                                document.getElementById('paginationInfo').textContent = 'Showing 0 to 0 of 0 entries';
+                                document.getElementById('prevPage').disabled = true;
+                                document.getElementById('nextPage').disabled = true;
+                                document.getElementById('paginationPages').innerHTML = '';
                             } else {
-                                const rows = appointments.map(appt => `
-                                    <tr class="text-center">
-                                        <td>${appt.student_name}</td>
-                                        <td>${appt.start_time} - ${appt.end_time}</td>
-                                        <td>
-                                            <span class="badge ${appt.status === 'booked' ? 'bg-warning text-dark' : appt.status === 'completed' ? 'bg-success' : 'bg-danger'}">
-                                                ${appt.status.charAt(0).toUpperCase() + appt.status.slice(1)}
-                                            </span>
-                                        </td>
-                                        <td>${appt.is_present ? 'Yes' : 'No'}</td>
-                                        <td>
-                                            <form method="POST" action="/admin/appointments/${appt.id}/mark">
-                                                @csrf
-                                                <input type="hidden" name="is_present" value="${appt.is_present ? 0 : 1}">
-                                                <button type="submit" class="btn btn-sm ${appt.is_present ? 'btn-secondary' : 'btn-success'}"
-                                                        onclick="return confirm('${appt.is_present ? 'Revert to Booked?' : 'Mark as Present?'}')">
-                                                    ${appt.is_present ? 'Revert' : 'Mark Present'}
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                `).join('');
-
-                                document.getElementById('appointmentsTable').innerHTML = rows;
+                                // Store all appointments in a variable for pagination
+                                let allAppointments = appointments;
+                                let currentPage = 1;
+                                let itemsPerPage = parseInt(document.getElementById('appointmentsPerPage').value);
+                                
+                                // Function to generate appointment row HTML
+                                function generateAppointmentRow(appt) {
+                                    return `
+                                        <tr class="text-center">
+                                            <td>${appt.student_name}</td>
+                                            <td>${appt.start_time} - ${appt.end_time}</td>
+                                            <td>
+                                                <span class="badge ${appt.status === 'booked' ? 'bg-warning text-dark' : appt.status === 'completed' ? 'bg-success' : 'bg-danger'}">
+                                                    ${appt.status.charAt(0).toUpperCase() + appt.status.slice(1)}
+                                                </span>
+                                            </td>
+                                            <td>${appt.is_present ? 'Yes' : 'No'}</td>
+                                            <td>
+                                                <form method="POST" action="/admin/appointments/${appt.id}/mark">
+                                                    @csrf
+                                                    <input type="hidden" name="is_present" value="${appt.is_present ? 0 : 1}">
+                                                    <button type="submit" class="btn btn-sm ${appt.is_present ? 'btn-secondary' : 'btn-success'}"
+                                                            onclick="return confirm('${appt.is_present ? 'Revert to Booked?' : 'Mark as Present?'}')">
+                                                        ${appt.is_present ? 'Revert' : 'Mark Present'}
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    `;
+                                }
+                                
+                                // Function to render appointments for the current page
+                                function renderAppointments() {
+                                    const startIndex = (currentPage - 1) * itemsPerPage;
+                                    const endIndex = Math.min(startIndex + itemsPerPage, allAppointments.length);
+                                    const paginatedAppointments = allAppointments.slice(startIndex, endIndex);
+                                    
+                                    // Update pagination info text
+                                    document.getElementById('paginationInfo').textContent = 
+                                        `Showing ${startIndex + 1} to ${endIndex} of ${allAppointments.length} entries`;
+                                    
+                                    // Generate table rows
+                                    const rows = paginatedAppointments.map(generateAppointmentRow).join('');
+                                    document.getElementById('appointmentsTable').innerHTML = rows;
+                                    
+                                    // Update pagination buttons
+                                    updatePaginationButtons();
+                                }
+                                
+                                // Function to update pagination buttons
+                                function updatePaginationButtons() {
+                                    const totalPages = Math.ceil(allAppointments.length / itemsPerPage);
+                                    document.getElementById('prevPage').disabled = currentPage === 1;
+                                    document.getElementById('nextPage').disabled = currentPage === totalPages;
+                                    
+                                    // Generate page number buttons
+                                    let pagesHTML = '';
+                                    for (let i = 1; i <= totalPages; i++) {
+                                        pagesHTML += `<button class="btn btn-sm ${currentPage === i ? 'btn-primary' : 'btn-outline-secondary'}" 
+                                                      onclick="setPage(${i})">${i}</button>`;
+                                    }
+                                    document.getElementById('paginationPages').innerHTML = pagesHTML;
+                                }
+                                
+                                // Function to change page
+                                window.setPage = function(page) {
+                                    currentPage = page;
+                                    renderAppointments();
+                                };
+                                
+                                // Set up event listeners for pagination controls
+                                document.getElementById('prevPage').addEventListener('click', function() {
+                                    if (currentPage > 1) {
+                                        currentPage--;
+                                        renderAppointments();
+                                    }
+                                });
+                                
+                                document.getElementById('nextPage').addEventListener('click', function() {
+                                    const totalPages = Math.ceil(allAppointments.length / itemsPerPage);
+                                    if (currentPage < totalPages) {
+                                        currentPage++;
+                                        renderAppointments();
+                                    }
+                                });
+                                
+                                document.getElementById('appointmentsPerPage').addEventListener('change', function() {
+                                    itemsPerPage = parseInt(this.value);
+                                    currentPage = 1; // Reset to first page when changing items per page
+                                    renderAppointments();
+                                });
+                                
+                                // Initial render
+                                renderAppointments();
                             }
                         })
                         .catch(error => {

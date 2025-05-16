@@ -63,7 +63,7 @@
         
         .main-content {
             padding: 20px;
-            margin-left: 20px;
+            margin-left: 100px;
         }
     </style>
 
@@ -71,9 +71,9 @@
 
 </head>
 <body>
-    <header>
-        <h1></h1>
-        <form action="{{ route('admin.logout') }}" method="POST" style="display: inline;">
+    @if(!request()->is('admin/login'))
+    <header class="d-flex justify-content-end">
+        <form action="{{ route('admin.logout') }}" method="POST">
             @csrf
             <button type="submit" class="btn btn-danger btn-sm">Logout</button>
         </form>
@@ -115,6 +115,7 @@
             @yield('content')
         </main>
     </div>
+    @endif
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

@@ -1,11 +1,18 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-@section('body_background', "url('" . asset('src/xu.png') . "') no-repeat center center fixed")
-
-@section('content')
 <style>
     body {
-
         /* Set background image directly */
         background-image: url('../../src/xu.png');
         background-repeat: no-repeat;
@@ -15,13 +22,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-    }
-    
         position: relative;
-        background: url('{{ asset('src/xu.png') }}') no-repeat center center fixed;
-        background-size: cover;
     }
-
 
     body::before {
         content: "";
@@ -33,7 +35,6 @@
         background: rgba(255, 255, 255, 0.3);
         z-index: -1;
     }
-
     
     .login-container {
         width: 100%;
@@ -81,43 +82,8 @@
         </div>
     </div>
 </div>
-@endsection
 
-</style>
-
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-lg">
-                <div class="card-header text-center" style="background-color: #17224D; color: white;">
-                    <h2>Admin Login</h2>
-                    <p class="mb-0">Sign in to manage the portal</p>
-                </div>
-                <div class="card-body p-4">
-                    @if(session('error'))
-                        <div class="alert alert-danger">
-                            {{ session('error') }}
-                        </div>
-                    @endif
-
-                    <form method="POST" action="{{ route('admin.login.submit') }}">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
-                        </div>
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary" style="background-color: #17224D;">Login</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@endsection
-
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
