@@ -6,6 +6,9 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
@@ -13,126 +16,136 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <style>
+        /* Top bar - Reduced height */
+        @auth
         header {
             background-color: #17224D;
             color: white;
-            padding: 15px;
+            padding: 8px 15px; /* Reduced padding */
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed; 
+            justify-content: flex-end;
+            align-items: center; /* Ensures vertical alignment */
+            height: 45px; /* Set fixed smaller height */
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             z-index: 1000;
         }
 
-        .sidebar {
-            width: 300px;
-            height: 100vh;
-            position: fixed;
-            background-color: #E0E7F1;
-            overflow-y: auto;
-            padding: 20px;
-            top: 60px; 
+        .nav-buttons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
-        .sidebar ul {
-            padding: 0;
-            list-style-type: none;
+        #notificationBell {
+            display: flex;
+            align-items: center;
+            background: none;
+            border: none;
+            font-size: 18px; /* Adjusted for smaller layout */
+            position: relative;
+            color: white;
+        }
+
+        #notificationBell i {
+            font-size: 18px; /* Slightly smaller */
+            color: white;
+            display: inline-block;
+        }
+
+        #notificationCount {
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            font-size: 12px;
+        }
+
+        .logout-btn {
+            padding: 5px 12px;
+            font-size: 14px;
+        }
+        @endauth
+
+        /* Sidebar */
+        @auth
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            background-color: #17224D;
+            padding: 20px;
+            top: 45px; /* Adjusted to match reduced header height */
+            color: white;
         }
 
         .sidebar .nav-link {
             display: flex;
             align-items: center;
-            justify-content: center;
-            flex-direction: column;
             padding: 15px;
-            background-color: #17224D;
-            border-radius: 20px;
-            margin-bottom: 15px;
             color: white;
             text-decoration: none;
             font-weight: bold;
-            text-align: center;
-            width: 100%;
-        }
-
-        .sidebar .nav-link img {
-            width: 30px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
             margin-bottom: 10px;
         }
 
-        .sidebar .nav-link span {
-            color: white;
+        .sidebar .nav-link i {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .sidebar .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
         }
 
         .main-content {
-            padding: 80px 20px 20px; 
+            margin-left: 250px;
+            padding: 65px 20px 20px; /* Adjusted padding to fit new header size */
         }
-        
-        .main-content-with-sidebar {
-            margin-left: 300px;
-        }
-
-        #notificationBell img {
-            width: 20px;
-            height: 20px;
-        }
+        @endauth
     </style>
 </head>
-<body style="@hasSection('body_background') background: @yield('body_background'); background-size: cover; @endif">
-
 <body>
- 
-    <header>
-        @auth
-            <div class="d-flex align-items-center ms-auto">
-                <div style="position: relative;" id="notification-wrapper" class="me-3">
-                    <button id="notificationBell" style="background: none; border: none; position: relative;">
-                        <img src="{{ asset('icons/Bell2.png') }}" alt="Notifications">
-                        <span id="notificationCount" class="badge bg-danger" style="position: absolute; top: -5px; right: -10px; font-size: 12px;"></span>
-                    </button>
-
-                    <div id="notificationDropdown" style="display: none; position: absolute; top: 30px; right: 0; background: white; border: 1px solid #ccc; width: 300px; z-index: 1000;">
-                        <ul id="notificationList" class="list-group list-group-flush" style="max-height: 300px; overflow-y: auto;"></ul>
-                    </div>
-                </div>
-
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn btn-sm btn-danger">Logout</button>
-                </form>
-            </div>
-        @endauth
-    </header>
 
     @auth
-    <!-- Layout for authenticated users -->
+    <header>
+        <div class="nav-buttons">
+            <button id="notificationBell">
+                <i class="bi bi-bell"></i> <!-- Bootstrap icon used -->
+                <span id="notificationCount" class="badge bg-danger"></span>
+            </button>
+
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="btn btn-sm btn-danger logout-btn">Logout</button>
+            </form>
+        </div>
+    </header>
+
     <div class="d-flex">
-        <nav class="sidebar p-3 border-end">
+        <nav class="sidebar">
             <ul class="nav flex-column">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('dashboard') }}">
-                        <img src="{{ asset('icons/Dashboard.png') }}" alt="Dashboard"> 
-                        <span>Dashboard</span>
+                        <i class="bi bi-speedometer2"></i> Dashboard
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('account.show') }}">
-                        <img src="{{ asset('icons/Profile.png') }}" alt="Account"> 
-                        <span>Account</span>
+                        <i class="bi bi-person"></i> Account
                     </a>
-               
+                </li>
+            </ul>
         </nav>
 
-        <!-- Main Content for authenticated users -->
-        <main class="main-content flex-grow-1 main-content-with-sidebar">
+        <main class="main-content flex-grow-1">
             @yield('content')
         </main>
     </div>
     @else
-    <!-- Layout for guests (login/register) -->
     <div>
         <main class="main-content">
             @yield('content')
