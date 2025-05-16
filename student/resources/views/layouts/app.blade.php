@@ -134,7 +134,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('account.show') }}">
+                    <a class="nav-link" href="{{ route('profile') }}">
                         <i class="bi bi-person"></i> Account
                     </a>
                 </li>

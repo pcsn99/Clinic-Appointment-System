@@ -38,8 +38,5 @@ Route::put('/profile/update', [AuthController::class, 'updateProfile'])->name('p
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
     
     // Account routes
-    Route::get('/account', [AccountController::class, 'show'])->name('account.show');
-    Route::get('/account/edit', [AccountController::class, 'edit'])->name('account.edit');
-    Route::put('/account', [AccountController::class, 'update'])->name('account.update');
 
 });
