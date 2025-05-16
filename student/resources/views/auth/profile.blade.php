@@ -97,11 +97,7 @@
                                 <td class="detail-label">Name:</td>
                                 <td class="detail-value">{{ $student->name }}</td>
                             </tr>
-                            <tr>
-                                <td class="detail-label">studentname:</td>
-                                <td class="detail-value">{{ $student->studentname }}</td>
-                            </tr>
-                            <tr>
+                        
                                 <td class="detail-label">Email:</td>
                                 <td class="detail-value">{{ $student->email }}</td>
                             </tr>
