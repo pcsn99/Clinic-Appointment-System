@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="container mt-5">
     <div class="card info-card text-center p-4" style="background-color: #17224D; color: white;">
         <h2 class="fw-bold display-4">Welcome, Clinic Admin</h2>
@@ -65,3 +66,5 @@
         </div>
     </div>
 </div>
+
+@endsection
