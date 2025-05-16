@@ -84,7 +84,7 @@ class AdminAppointmentController extends Controller
 
     public function index()
     {
-        $this->handleSmartRescheduling(); 
+        
     
         $appointments = Appointment::join('schedules', 'appointments.schedule_id', '=', 'schedules.id')
             ->join('users', 'appointments.user_id', '=', 'users.id')
@@ -188,7 +188,7 @@ class AdminAppointmentController extends Controller
     }
     
 
-    protected function handleSmartRescheduling()
+    public function handleSmartRescheduling()
     {
         $now = now();
         $today = $now->toDateString();

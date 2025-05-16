@@ -56,14 +56,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('notifications', function (Blueprint $table) {
-            $table->id();
-            $table->morphs('notifiable'); // handles both users and admins
-            $table->string('title');
-            $table->text('message');
-            $table->boolean('is_read')->default(false);
-            $table->timestamps();
-        });
+
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
@@ -83,7 +76,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('notifications');
+
         Schema::dropIfExists('pin_codes');
         Schema::dropIfExists('certificate_uploads');
         Schema::dropIfExists('appointments');
