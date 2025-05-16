@@ -10,7 +10,7 @@
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {{ session('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>a
+                </div>
             @endif
 
             <h2>Welcome, {{ Auth::user()->name }}</h2>
@@ -18,10 +18,7 @@
             <p>Course: {{ Auth::user()->course }} | Year: {{ Auth::user()->year }}</p>
             <p>Contact: {{ Auth::user()->contact_number }}</p>
 
-            <div class="mb-4">
-                <a href="{{ route('profile') }}" class="btn btn-primary">View Full Profile</a>
-                <a href="{{ route('profile.edit') }}" class="btn btn-outline-primary">Edit Profile</a>
-            </div>
+            <!-- Profile buttons removed as they're redundant with the Account button in the sidebar -->
 
             <hr>
 
