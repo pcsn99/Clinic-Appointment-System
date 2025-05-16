@@ -8,7 +8,6 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\Admin\LogViewerController;
 use App\Http\Controllers\AdminAppointmentController;
 
-use App\Http\Controllers\Admin\LogViewerController;
 
 use App\Http\Controllers\WalkinNotificationController;
 
