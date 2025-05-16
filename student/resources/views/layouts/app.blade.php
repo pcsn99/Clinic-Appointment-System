@@ -109,9 +109,9 @@
     </style>
 </head>
 <body>
-
     @auth
     <header>
+        <h1 class="me-auto">Student Clinic Scheduler</h1>
         <div class="nav-buttons">
             <button id="notificationBell">
                 <i class="bi bi-bell"></i> <!-- Bootstrap icon used -->
@@ -194,6 +194,9 @@
         });
     </script>
 
+    <!-- Bootstrap JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
     @stack('scripts') 
 </body>
 </html>
