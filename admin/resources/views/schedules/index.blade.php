@@ -2,14 +2,14 @@
 
 @section('content')
     <div class="container" style="max-width: 900px;">
-        {{-- Styled Title Box (Matching Account Details Format) --}}
+       
         <div class="text-center mb-4 p-3 rounded" style="background-color: #162163; color: white; font-weight: bold; font-size: 24px;">
             Account Schedule Management
         </div>
 
-        {{-- Schedule Management Section (Styled like Account Details) --}}
+        
         <div class="p-4 mb-4 rounded" style="border: 2px solid #162163; background-color: white;">
-            {{-- Action Buttons --}}
+      
             <div class="mb-4 text-center">
                 <a href="{{ route('schedules.create') }}" class="btn text-white mx-2 px-4 py-2"
                    style="background-color: #162163; border-radius: 6px; font-weight: bold;">New Schedule</a>
@@ -17,12 +17,10 @@
                    style="background-color: #162163; border-radius: 6px; font-weight: bold;">Bulk Create</a>
             </div>
 
-            {{-- Success Message --}}
             @if(session('success'))
                 <div class="alert alert-success text-center" style="border-radius: 6px; font-weight: bold;">{{ session('success') }}</div>
             @endif
 
-            {{-- Schedule Table --}}
             <form id="bulkDeleteForm" method="POST" action="{{ route('schedules.bulk.delete') }}">
                 @csrf
                 <div class="table-responsive">
@@ -67,13 +65,12 @@
                 </div>
             </form>
 
-            {{-- Delete Selected Button --}}
             <div class="text-center mt-3">
                 <button type="submit" form="bulkDeleteForm" class="btn btn-danger px-5 py-2" id="bulkDeleteBtn" disabled
                         style="border-radius: 6px; font-weight: bold;">Delete Selected</button>
             </div>
 
-            {{-- Back to Dashboard Button --}}
+            
             <div class="text-center mt-4">
                 <a href="{{ route('admin.dashboard') }}" class="btn text-white px-5 py-2"
                    style="background-color: #162163; border-radius: 6px; font-weight: bold;">Back to Dashboard</a>
@@ -81,7 +78,7 @@
         </div>
     </div>
 
-    {{-- JavaScript for checkbox logic --}}
+    
     <script>
         document.getElementById('checkAll').addEventListener('change', function () {
             const checkboxes = document.querySelectorAll('input[name="selected[]"]');
