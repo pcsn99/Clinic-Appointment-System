@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DB_NAME="clinic_appointment"
-DB_USER="user1"
+DB_NAME="clinic_db"
+DB_USER="clinic_user"
 DB_PASS="password"
 
 BACKUP_DIR="$HOME/clinic_db_backups"
