@@ -69,12 +69,6 @@
                 <button type="submit" form="bulkDeleteForm" class="btn btn-danger px-5 py-2" id="bulkDeleteBtn" disabled
                         style="border-radius: 6px; font-weight: bold;">Delete Selected</button>
             </div>
-
-            
-            <div class="text-center mt-4">
-                <a href="{{ route('admin.dashboard') }}" class="btn text-white px-5 py-2"
-                   style="background-color: #162163; border-radius: 6px; font-weight: bold;">Back to Dashboard</a>
-            </div>
         </div>
     </div>
 

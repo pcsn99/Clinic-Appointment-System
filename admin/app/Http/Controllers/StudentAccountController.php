@@ -54,15 +54,19 @@ class StudentAccountController extends Controller
         
         // Paginate the sorted collection manually
         $page = $request->input('page', 1);
-        $perPage = 15;
+        $perPage = 7; // Changed from 15 to 7 to prevent scrolling
         $total = $sortedStudents->count();
         
+        // Create a custom pagination instance with fixed parameters to ensure consistent width
         $students = new \Illuminate\Pagination\LengthAwarePaginator(
             $sortedStudents->forPage($page, $perPage),
             $total,
             $perPage,
             $page,
-            ['path' => $request->url(), 'query' => $request->query()]
+            [
+                'path' => $request->url(), 
+                'query' => array_merge($request->query(), ['width' => 'fixed'])
+            ]
         );
         
         // Add a data attribute with student details for each student to avoid AJAX
