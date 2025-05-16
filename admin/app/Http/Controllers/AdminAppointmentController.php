@@ -22,10 +22,17 @@ class AdminAppointmentController extends Controller
 
         if ($request->has('search')) {
             $search = $request->input('search');
-            $users = User::where('name', 'like', "%{$search}%")
-                        ->orWhere('email', 'like', "%{$search}%")
-                        ->orWhere('username', 'like', "%{$search}%")
-                        ->get();
+            
+            // Only search if the search term is not empty
+            if (!empty(trim($search))) {
+                $users = User::where('name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%")
+                            ->orWhere('username', 'like', "%{$search}%")
+                            ->get();
+            } else {
+                // Return to the page without showing any results if search is empty
+                $users = collect([]);
+            }
         }
 
         if ($request->has('user_id')) {
@@ -69,7 +76,8 @@ class AdminAppointmentController extends Controller
             'message' => 'You have been booked for an appointment by the clinic.',
         ]);
 
-        return redirect()->route('admin.dashboard')->with('success', 'Appointment booked successfully.');
+        // Return to the same page with success message instead of redirecting
+        return back()->with('appointment_success', 'Appointment booked successfully.');
     }
 
 
@@ -158,20 +166,25 @@ class AdminAppointmentController extends Controller
     public function schedulesByDate(Request $request)
     {
         $date = $request->date;
-    
-        $schedules = Schedule::where('date', $date)
-            ->withCount('appointments')
-            ->get()
-            ->map(function ($s) {
-                return [
-                    'start_time' => $s->start_time,
-                    'end_time' => $s->end_time,
-                    'slot_limit' => $s->slot_limit,
-                    'booked' => $s->appointments_count,
-                ];
-            });
-    
-        return response()->json($schedules);
+        
+        // Get appointments for the selected date with student information
+        $appointments = Appointment::whereHas('schedule', function($query) use ($date) {
+            $query->where('date', $date);
+        })
+        ->with(['schedule', 'user'])
+        ->get()
+        ->map(function($appointment) {
+            return [
+                'id' => $appointment->id,
+                'student_name' => $appointment->user->name ?? 'Unknown',
+                'start_time' => $appointment->schedule->start_time ?? '',
+                'end_time' => $appointment->schedule->end_time ?? '',
+                'status' => $appointment->status ?? 'booked', // Default to 'booked' if status is null
+                'is_present' => $appointment->is_present ?? false,
+            ];
+        });
+        
+        return response()->json($appointments);
     }
     
 

@@ -1,48 +1,69 @@
 @extends('layouts.app')
 
 @section('content')
-<h2>Welcome, {{ Auth::user()->name }}</h2>
-<p>You are logged in as <strong>{{ Auth::user()->username }}</strong> ({{ Auth::user()->email }})</p>
-<p>Course: {{ Auth::user()->course }} | Year: {{ Auth::user()->year }}</p>
-<p>Contact: {{ Auth::user()->contact_number }}</p>
 
-<hr>
+<!--Kat added function-->
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
 
-@if($currentBooking)
-    <div class="alert alert-info">
-        <strong>Current Appointment:</strong><br>
-        {{ $currentBooking->schedule->date }} | {{ $currentBooking->schedule->start_time }} - {{ $currentBooking->schedule->end_time }}<br>
-        Status: <strong>{{ ucfirst($currentBooking->status) }}</strong><br>
-        Present: {{ $currentBooking->is_present ? 'Yes' : 'No' }}
+            <h2>Welcome, {{ Auth::user()->name }}</h2>
+            <p>You are logged in as <strong>{{ Auth::user()->username }}</strong> ({{ Auth::user()->email }})</p>
+            <p>Course: {{ Auth::user()->course }} | Year: {{ Auth::user()->year }}</p>
+            <p>Contact: {{ Auth::user()->contact_number }}</p>
 
-        @if($currentBooking->status === 'booked' && !$currentBooking->is_present)
-            <br><br>
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#pinModal">✅ Mark as Present</button>
-        @elseif($currentBooking->is_present)
-            <br><br>
-            <button class="btn btn-primary" disabled>📎 Upload Certificate (Coming Soon)</button>
-        @endif
+            <div class="mb-4">
+                <a href="{{ route('profile') }}" class="btn btn-primary">View Full Profile</a>
+                <a href="{{ route('profile.edit') }}" class="btn btn-outline-primary">Edit Profile</a>
+            </div>
+
+            <hr>
+
+            @if($currentBooking)
+                <div class="alert alert-info">
+                    <strong>Current Appointment:</strong><br>
+                    {{ $currentBooking->schedule->date }} | {{ $currentBooking->schedule->start_time }} - {{ $currentBooking->schedule->end_time }}<br>
+                    Status: <strong>{{ ucfirst($currentBooking->status) }}</strong><br>
+                    Present: {{ $currentBooking->is_present ? 'Yes' : 'No' }}
+
+                    @if($currentBooking->status === 'booked' && !$currentBooking->is_present)
+                        <br><br>
+                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#pinModal">✅ Mark as Present</button>
+                    @elseif($currentBooking->is_present)
+                        <br><br>
+                        <button class="btn btn-primary" disabled>📎 Upload Certificate (Coming Soon)</button>
+                    @endif
+                </div>
+            @endif
+
+            @if(!$currentBooking || !$currentBooking->is_present)
+                <a href="{{ route('student.appointments.index') }}" class="btn btn-primary">📅 Book Appointment</a>
+            @endif
+
+            <hr>
+
+            <h4>Today's Available Schedules</h4>
+            @if($todaySchedules->isEmpty())
+                <p>No available schedules today.</p>
+            @else
+                <ul class="list-group">
+                    @foreach($todaySchedules as $sched)
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ $sched->start_time }} - {{ $sched->end_time }}
+                            <span class="badge bg-primary rounded-pill">{{ $sched->appointments_count }}/{{ $sched->slot_limit }}</span>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+        </div>
     </div>
-@endif
-
-@if(!$currentBooking || !$currentBooking->is_present)
-    <a href="{{ route('student.appointments.index') }}">
-        <button class="btn btn-primary">📅 Book Appointment</button>
-    </a>
-@endif
-
-<hr>
-
-<h4>Today's Available Schedules</h4>
-@if($todaySchedules->isEmpty())
-    <p>No available schedules today.</p>
-@else
-    <ul>
-        @foreach($todaySchedules as $sched)
-            <li>{{ $sched->start_time }} - {{ $sched->end_time }} ({{ $sched->appointments_count }}/{{ $sched->slot_limit }})</li>
-        @endforeach
-    </ul>
-@endif
+</div>
 
 {{-- PIN Modal --}}
 <div class="modal fade" id="pinModal" tabindex="-1" aria-labelledby="pinModalLabel" aria-hidden="true">
@@ -61,14 +82,64 @@
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success">Submit</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
 
-<form method="POST" action="{{ route('logout') }}">
-    @csrf
-    <button type="submit" class="btn btn-danger mt-4">Logout</button>
-</form>
+<div class="container mt-5">
+    <div class="card info-card text-center p-4" style="background-color: #17224D; color: white;">
+        <h2 class="fw-bold display-4">Welcome, {{ Auth::user()->name }}</h2>
+    </div>
+
+    <div class="row mt-4">
+        <!-- Current Appointment Section -->
+        <div class="col-md-6">
+            <div class="card appointment-card text-center p-4" style="border: 2px solid #17224D;">
+                <h4 class="fw-bold display-5">Current Appointment</h4>
+                @if($currentBooking)
+                    <div class="fs-4">
+                        <p><strong>Date:</strong> {{ $currentBooking->schedule->date }}</p>
+                        <p><strong>Time:</strong> {{ $currentBooking->schedule->start_time }} - {{ $currentBooking->schedule->end_time }}</p>
+                        <p><strong>Status:</strong> {{ ucfirst($currentBooking->status) }}</p>
+                        <p><strong>Present:</strong> {{ $currentBooking->is_present ? 'Yes' : 'No' }}</p>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        @if($currentBooking->status === 'booked' && !$currentBooking->is_present)
+                            <button class="btn btn-success btn-lg mx-2" data-bs-toggle="modal" data-bs-target="#pinModal">Mark as Present</button>
+                        @elseif($currentBooking->is_present)
+                            <button class="btn btn-primary btn-lg mx-2" disabled>Upload Certificate (Coming Soon)</button>
+                        @endif
+                    </div>
+
+                @else
+                    <p class="text-muted fs-5">No current booking available.</p>
+                @endif
+            </div>
+
+        </div>
+
+        <!-- Today's Available Schedules Section -->
+        <div class="col-md-6">
+            <div class="card schedule-card text-center p-4" style="border: 2px solid #17224D;">
+                <h4 class="fw-bold display-5">Today's Available Schedules</h4>
+                @if($todaySchedules->isEmpty())
+                    <p class="text-muted fs-5">No available schedules today.</p>
+                @else
+                    <ul class="list-group">
+                        @foreach($todaySchedules as $sched)
+                            <li class="list-group-item d-flex justify-content-between align-items-center fs-5">
+                                <strong>{{ $sched->start_time }} - {{ $sched->end_time }}</strong>
+                                <span class="badge bg-primary fs-5">{{ $sched->appointments_count }}/{{ $sched->slot_limit }}</span>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
 @endsection
+
