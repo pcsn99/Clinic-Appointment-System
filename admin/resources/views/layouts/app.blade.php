@@ -12,74 +12,7 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <style>
-        
-        header {
-            background-color: #17224D;
-            color: white;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed; 
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-
-        .sidebar {
-            width: 300px;
-            height: 100vh;
-            position: fixed;
-            background-color: #E0E7F1;
-            overflow-y: auto;
-            padding: 20px;
-            top: 60px; 
-        }
-
-        .sidebar ul {
-            padding: 0;
-            list-style-type: none;
-        }
-
-        .sidebar .nav-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            padding: 15px;
-            background-color: #17224D;
-            border-radius: 20px;
-            margin-bottom: 15px;
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            text-align: center;
-            width: 100%;
-        }
-
-        .sidebar .nav-link img {
-            width: 30px;
-            margin-bottom: 10px;
-        }
-
-        .sidebar .nav-link span {
-            color: white;
-        }
-
-        
-        .main-content {
-            margin-left: 300px; 
-            padding: 80px 20px 20px; 
-        }
-
-      
-        .notification-bell img {
-            width: 20px;
-            height: 20px;
-        }
-    </style>
+    
 </head>
 <body>
 

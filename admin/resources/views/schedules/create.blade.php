@@ -1,26 +1,29 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        {{-- ✅ Page Header --}}
-        <div class="card p-4 shadow-sm mb-4">
-            <h2 class="text-center">Create a New Schedule</h2>
-            <p class="text-center text-muted">Fill in the details below to set up a new schedule.</p>
+    <div class="container" style="max-width: 900px;">
+        {{-- Styled Title Box (Matching Account Details Format) --}}
+        <div class="text-center mb-4 p-3 rounded" style="background-color: #162163; color: white; font-weight: bold; font-size: 24px;">
+            Create a New Schedule
         </div>
 
-        {{-- ✅ Error Messages --}}
-        @if($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+        {{-- Styled Form Section (Matching Account Details Layout) --}}
+        <div class="p-4 rounded" style="border: 2px solid #162163; background-color: white;">
+            {{-- Instructional Text --}}
+            <p class="text-center text-muted">Fill in the details below to set up a new schedule.</p>
 
-        {{-- ✅ Schedule Form --}}
-        <div class="card p-4 shadow-sm">
+            {{-- ✅ Error Messages --}}
+            @if($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            {{-- ✅ Schedule Form --}}
             <form method="POST" action="{{ route('schedules.store') }}">
                 @csrf
                 <div class="row">
@@ -58,7 +61,7 @@
 
         {{-- ✅ Back Button --}}
         <div class="text-center mt-4">
-            <a href="{{ route('schedules.index') }}" class="btn btn-secondary"  >Back to Schedules</a>
+            <a href="{{ route('schedules.index') }}" class="btn btn-secondary">Back to Schedules</a>
         </div>
     </div>
 

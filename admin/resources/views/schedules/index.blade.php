@@ -2,23 +2,24 @@
 
 @section('content')
     <div class="container" style="max-width: 900px;">
-        <div class="border rounded shadow p-4" style="border-color: #3f51b5;">
-            <h2 class="text-center mb-4" style="color: #162163;">Schedule Management</h2>
+        {{-- Styled Title Box (Matching Account Details Format) --}}
+        <div class="text-center mb-4 p-3 rounded" style="background-color: #162163; color: white; font-weight: bold; font-size: 24px;">
+            Account Schedule Management
+        </div>
 
-            {{-- ✅ Back to Dashboard Button --}}
-            <div class="mb-3">
-                <a href="{{ route('admin.dashboard') }}" class="btn btn-dark" style="background-color: #162163;">Back to Dashboard</a>
-            </div>
-
+        {{-- Schedule Management Section (Styled like Account Details) --}}
+        <div class="p-4 mb-4 rounded" style="border: 2px solid #162163; background-color: white;">
             {{-- Action Buttons --}}
             <div class="mb-4 text-center">
-                <a href="{{ route('schedules.create') }}" class="btn text-white mx-2" style="background-color: #162163;">New Schedule</a>
-                <a href="{{ route('schedules.bulk.create') }}" class="btn text-white mx-2" style="background-color: #162163;">Bulk Create</a>
+                <a href="{{ route('schedules.create') }}" class="btn text-white mx-2 px-4 py-2"
+                   style="background-color: #162163; border-radius: 6px; font-weight: bold;">New Schedule</a>
+                <a href="{{ route('schedules.bulk.create') }}" class="btn text-white mx-2 px-4 py-2"
+                   style="background-color: #162163; border-radius: 6px; font-weight: bold;">Bulk Create</a>
             </div>
 
             {{-- Success Message --}}
             @if(session('success'))
-                <div class="alert alert-success text-center">{{ session('success') }}</div>
+                <div class="alert alert-success text-center" style="border-radius: 6px; font-weight: bold;">{{ session('success') }}</div>
             @endif
 
             {{-- Schedule Table --}}
@@ -26,7 +27,7 @@
                 @csrf
                 <div class="table-responsive">
                     <table class="table table-bordered">
-                        <thead style="background-color: #3f51b5; color: white;">
+                        <thead style="background-color: #162163; color: white; text-align: center;">
                             <tr>
                                 <th><input type="checkbox" id="checkAll"></th>
                                 <th>Date</th>
@@ -38,24 +39,27 @@
                         </thead>
                         <tbody>
                             @forelse($schedules as $schedule)
-                                <tr>
+                                <tr style="text-align: center;">
                                     <td><input type="checkbox" form="bulkDeleteForm" name="selected[]" value="{{ $schedule->id }}"></td>
                                     <td>{{ $schedule->date }}</td>
                                     <td>{{ $schedule->start_time }}</td>
                                     <td>{{ $schedule->end_time }}</td>
                                     <td>{{ $schedule->slot_limit }}</td>
                                     <td>
-                                        <a href="{{ route('schedules.edit', $schedule) }}" class="btn btn-warning btn-sm" style="background-color: #162163; color: white;">Edit</a>
+                                        <a href="{{ route('schedules.edit', $schedule) }}" class="btn btn-sm text-white"
+                                           style="background-color: #162163; border-radius: 4px; font-weight: bold;">Edit</a>
                                         <form method="POST" action="{{ route('schedules.bulk.delete') }}" style="display:inline;">
                                             @csrf
                                             <input type="hidden" name="selected[]" value="{{ $schedule->id }}">
-                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirmDelete('{{ $schedule->date }}')">Delete</button>
+                                            <button type="submit" class="btn btn-danger btn-sm"
+                                                    onclick="return confirmDelete('{{ $schedule->date }}')"
+                                                    style="border-radius: 4px; font-weight: bold;">Delete</button>
                                         </form>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center text-muted">No schedules found.</td>
+                                    <td colspan="6" class="text-center text-muted" style="font-style: italic;">No schedules found.</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -65,7 +69,14 @@
 
             {{-- Delete Selected Button --}}
             <div class="text-center mt-3">
-                <button type="submit" form="bulkDeleteForm" class="btn btn-danger px-4" id="bulkDeleteBtn" disabled>Delete Selected</button>
+                <button type="submit" form="bulkDeleteForm" class="btn btn-danger px-5 py-2" id="bulkDeleteBtn" disabled
+                        style="border-radius: 6px; font-weight: bold;">Delete Selected</button>
+            </div>
+
+            {{-- Back to Dashboard Button --}}
+            <div class="text-center mt-4">
+                <a href="{{ route('admin.dashboard') }}" class="btn text-white px-5 py-2"
+                   style="background-color: #162163; border-radius: 6px; font-weight: bold;">Back to Dashboard</a>
             </div>
         </div>
     </div>
