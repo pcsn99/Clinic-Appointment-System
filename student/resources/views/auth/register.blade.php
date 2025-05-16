@@ -7,7 +7,6 @@
 <style>
     body {
         position: relative;
-        background: url('{{ asset('src/xu.png') }}') no-repeat center center fixed;
         background-size: cover;
     }
 
@@ -22,6 +21,11 @@
         z-index: -1; 
     }
 </style>
+
+<script>
+    // Set the background image using JavaScript
+    document.body.style.background = "url('{{ asset('src/xu.png') }}') no-repeat center center fixed";
+</script>
 
 <div class="container mt-5">
     <div class="row justify-content-center">
@@ -40,8 +44,8 @@
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
                         <div class="mb-3">
-                            <label for="full_name" class="form-label">Full Name</label>
-                            <input type="text" class="form-control" id="full_name" name="full_name" placeholder="Enter full name" required>
+                            <label for="name" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter full name" required>
                         </div>
                         <div class="mb-3">
                             <label for="username" class="form-label">Username</label>
@@ -52,8 +56,8 @@
                             <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
                         </div>
                         <div class="mb-3">
-                            <label for="phone_number" class="form-label">Phone Number</label>
-                            <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="Enter phone number" required>
+                            <label for="contact_number" class="form-label">Phone Number</label>
+                            <input type="text" class="form-control" id="contact_number" name="contact_number" placeholder="Enter phone number" required>
                         </div>
                         <div class="mb-3">
                             <label for="college" class="form-label">Select College</label>
@@ -69,6 +73,17 @@
                             </select>
                         </div>
                         <div class="mb-3">
+                            <label for="year" class="form-label">Year Level</label>
+                            <select class="form-control" id="year" name="year" required>
+                                <option value="">Select Year Level</option>
+                                <option value="1st Year">1st Year</option>
+                                <option value="2nd Year">2nd Year</option>
+                                <option value="3rd Year">3rd Year</option>
+                                <option value="4th Year">4th Year</option>
+                                <option value="5th Year">5th Year</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
                             <label for="course" class="form-label">Select Course</label>
                             <select class="form-control" id="course" name="course" required>
                                 <option value="">Select Course</option>
@@ -79,8 +94,8 @@
                             <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
                         </div>
                         <div class="mb-3">
-                            <label for="confirm_password" class="form-label">Confirm Password</label>
-                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm password" required>
+                            <label for="password_confirmation" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirm password" required>
                         </div>
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary" style="background-color: #17224D;">Register</button>

@@ -63,6 +63,18 @@
                         </tbody>
                     </table>
                 </div>
+                
+                <!-- Pagination Information -->
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div class="text-muted">
+                        Showing {{ $schedules->firstItem() ?? 0 }} to {{ $schedules->lastItem() ?? 0 }} of {{ $schedules->total() }} entries
+                    </div>
+                    
+                    <!-- Pagination Controls -->
+                    <div class="pagination justify-content-end">
+                        {{ $schedules->appends(request()->query())->links('pagination::bootstrap-4') }}
+                    </div>
+                </div>
             </form>
 
             <div class="text-center mt-3">
