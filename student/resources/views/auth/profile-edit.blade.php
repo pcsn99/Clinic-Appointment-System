@@ -82,14 +82,7 @@
                     @enderror
                 </div>
 
-                <div class="mb-3">
-                    <label for="studentname" class="form-label">studentname</label>
-                    <input type="text" class="form-control @error('studentname') is-invalid @enderror" id="studentname" name="studentname" value="{{ old('studentname', $student->studentname) }}" required>
-                    @error('studentname')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
+               
                 
 
                                         <div class="mb-3">
@@ -152,15 +145,5 @@
                     </div>
                 </div>
 
-                <p class="text-muted">studentname cannot be changed: <strong>{{ $student->username }}</strong></p>
-
-                <div class="d-flex justify-content-between">
-                    <button type="submit" class="btn btn-primary">Update Profile</button>
-                    <a href="{{ route('profile') }}" class="btn btn-secondary">Cancel</a>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
+               
 @endsection
