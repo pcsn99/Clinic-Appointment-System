@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
 <style>
     .student-accounts-container {
         width: 900px;
@@ -117,10 +118,12 @@
                     </div>
                 @endif
             </div>
+
         </div>
     </div>
     
     <!-- Student Details Modal -->
+
     <div class="modal fade" id="studentModal" tabindex="-1" aria-labelledby="studentModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -181,15 +184,18 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
+
             </div>
         </div>
     </div>
     
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const studentModal = new bootstrap.Modal(document.getElementById('studentModal'));
             const viewDetailsBtns = document.querySelectorAll('.view-details-btn');
             
+
             // Add click event to all "View Details" buttons
             viewDetailsBtns.forEach(function(btn) {
                 btn.addEventListener('click', function() {
@@ -248,7 +254,9 @@
                         }
                         
                         // Show modal
+
                         studentModal.show();
+
                     } catch (error) {
                         console.error('Error parsing student details:', error);
                         alert('Failed to load student details. Please try again.');

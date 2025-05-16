@@ -2,6 +2,7 @@
 
 @section('content')
 
+
 <style>
     .container {
         max-width: 1000px;
@@ -143,4 +144,5 @@
                 </div>
 
                
+
 @endsection

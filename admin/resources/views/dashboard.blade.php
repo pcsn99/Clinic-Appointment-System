@@ -50,6 +50,7 @@
             </div>
         </div>
 
+
         <!-- PIN Codes Section -->
         <div class="col-md-6">
             <div class="card schedule-card text-center p-4" style="border: 2px solid #17224D;">
@@ -64,4 +65,3 @@
         </div>
     </div>
 </div>
-@endsection
