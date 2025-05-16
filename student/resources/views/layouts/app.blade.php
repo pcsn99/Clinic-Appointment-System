@@ -109,9 +109,9 @@
     </style>
 </head>
 <body>
-
     @auth
     <header>
+        <h1 class="me-auto">Student Clinic Scheduler</h1>
         <div class="nav-buttons">
             <button id="notificationBell">
                 <i class="bi bi-bell"></i> <!-- Bootstrap icon used -->
