@@ -138,6 +138,11 @@
                         <i class="bi bi-person"></i> Account
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('student.appointments.index') }}">
+                        <i class="bi bi-calendar-plus"></i> Book Appointment
+                    </a>
+                </li>
             </ul>
         </nav>
 

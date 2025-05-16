@@ -39,11 +39,9 @@
                 </div>
             @endif
 
-            @if(!$currentBooking || !$currentBooking->is_present)
-                <a href="{{ route('student.appointments.index') }}" class="btn btn-primary">📅 Book Appointment</a>
-            @endif
+            <!-- Book Appointment button removed as it's now in the sidebar -->
 
-            <hr>
+            
 
             <h4>Today's Available Schedules</h4>
             @if($todaySchedules->isEmpty())
@@ -125,11 +123,7 @@
             </ul>
         @endif
 
-        @if(!$currentBooking || !$currentBooking->is_present)
-        <div class="text-center my-4">
-            <a href="{{ route('student.appointments.index') }}" class="btn btn-primary btn-lg action-btn">Book Appointment</a>
-        </div>
-        @endif
+        <!-- Book Appointment button removed as it's now in the sidebar -->
     </div>
 
     <div class="modal fade" id="pinModal" tabindex="-1" aria-labelledby="pinModalLabel" aria-hidden="true">
