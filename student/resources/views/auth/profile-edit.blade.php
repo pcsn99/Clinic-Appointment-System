@@ -82,24 +82,21 @@
                     @enderror
                 </div>
 
-               
-                
+               <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $student->email) }}" required>
+                        @error('email')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                </div>
 
-                                        <div class="mb-3">
-                                            <label for="email" class="form-label">Email</label>
-                                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $student->email) }}" required>
-                                            @error('email')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label for="course" class="form-label">Course</label>
-                                            <input type="text" class="form-control @error('course') is-invalid @enderror" id="course" name="course" value="{{ old('course', $student->course) }}" required>
-                                            @error('course')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
+                 <div class="mb-3">
+                    <label for="course" class="form-label">Course</label>
+                    <input type="text" class="form-control @error('course') is-invalid @enderror" id="course" name="course" value="{{ old('course', $student->course) }}" required>
+                         @error('course')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                </div>
 
                                         <div class="mb-3">
                                             <label for="year" class="form-label">Year</label>

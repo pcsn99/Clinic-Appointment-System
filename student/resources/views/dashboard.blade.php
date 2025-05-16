@@ -7,6 +7,7 @@
     </div>
 
     <div class="row mt-4">
+        <!-- Current Appointment Section -->
         <div class="col-md-6">
             <div class="card appointment-card text-center p-4" style="border: 2px solid #17224D;">
                 <h4 class="fw-bold display-5">Current Appointment</h4>
@@ -17,12 +18,21 @@
                         <p><strong>Status:</strong> {{ ucfirst($currentBooking->status) }}</p>
                         <p><strong>Present:</strong> {{ $currentBooking->is_present ? 'Yes' : 'No' }}</p>
                     </div>
+
+                    <div class="text-center mt-3">
+                        @if($currentBooking->status === 'booked' && !$currentBooking->is_present)
+                            <button class="btn btn-success btn-lg mx-2" data-bs-toggle="modal" data-bs-target="#pinModal">Mark as Present</button>
+                        @elseif($currentBooking->is_present)
+                            <button class="btn btn-primary btn-lg mx-2" disabled>Upload Certificate (Coming Soon)</button>
+                        @endif
+                    </div>
                 @else
                     <p class="text-muted fs-5">No current booking available.</p>
                 @endif
             </div>
         </div>
 
+        <!-- Today's Available Schedules Section -->
         <div class="col-md-6">
             <div class="card schedule-card text-center p-4" style="border: 2px solid #17224D;">
                 <h4 class="fw-bold display-5">Today's Available Schedules</h4>
@@ -38,9 +48,22 @@
                         @endforeach
                     </ul>
                 @endif
+
+                @if(!$currentBooking || !$currentBooking->is_present)
+                    <div class="text-center my-4">
+                        <a href="{{ route('student.appointments.index') }}" class="btn btn-primary btn-lg mx-2">📅 Book Appointment</a>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
-</div>
 
+    <!-- Logout Button -->
+    <div class="text-center mt-4">
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="btn btn-danger btn-lg mx-2">Logout</button>
+        </form>
+    </div>
+</div>
 @endsection
