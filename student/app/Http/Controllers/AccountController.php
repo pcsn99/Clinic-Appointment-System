@@ -19,6 +19,7 @@ class AccountController extends Controller
     public function edit()
     {
         $user = Auth::user();
+        dd($user);
         return \view('auth.profile-edit', compact('user'));
     }
 
@@ -50,7 +51,7 @@ class AccountController extends Controller
         $user->year = $request->year;
         $user->contact_number = $request->contact_number;
         $user->username = $request->username;
-        $user->save();
+        $user->save;
 
         return \redirect()->route('account.show')->with('success', 'Profile updated successfully.');
     }
