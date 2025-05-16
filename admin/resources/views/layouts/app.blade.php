@@ -13,11 +13,17 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
-
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-
     <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
         header {
             background-color: #17224D;
             color: white;
@@ -26,60 +32,64 @@
             justify-content: space-between;
             align-items: center;
         }
-        
+
         header h1 {
             margin: 0;
             font-size: 24px;
         }
-        
+
+        .container-layout {
+            display: flex;
+            flex-grow: 1;
+        }
+
         .sidebar {
-            width: 280px;
+            width: 230px; 
             background-color: #17224D;
             color: white;
             height: 100vh;
-            padding: 20px;
+            padding: 15px; 
+            flex-shrink: 0;
         }
-        
+
         .sidebar .nav-link {
             display: flex;
             align-items: center;
-            padding: 18px;
+            padding: 12px;
             color: white;
             text-decoration: none;
             font-weight: bold;
             background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            margin-bottom: 20px;
+            border-radius: 8px;
+            margin-bottom: 12px; 
         }
-        
+
         .sidebar .nav-link i {
-            font-size: 24px;
-            margin-right: 10px;
+            font-size: 18px;
+            margin-right: 8px;
         }
-        
+
         .sidebar .nav-link:hover {
             background-color: rgba(255, 255, 255, 0.2);
         }
-        
+
         .main-content {
+            flex-grow: 1;
             padding: 20px;
-            margin-left: 100px;
+            min-width: 0;
         }
     </style>
-
-    
-
 </head>
 <body>
-    @if(!request()->is('admin/login'))
-    <header class="d-flex justify-content-end">
-        <form action="{{ route('admin.logout') }}" method="POST">
+    <header>
+        <h1></h1>
+        <form action="{{ route('admin.logout') }}" method="POST" style="display: inline;">
             @csrf
             <button type="submit" class="btn btn-danger btn-sm">Logout</button>
         </form>
     </header>
 
-    <div class="d-flex">
+    <div class="container-layout">
         <nav class="sidebar">
             <ul class="nav flex-column">
                 <li class="nav-item">
@@ -110,12 +120,10 @@
             </ul>
         </nav>
 
-        <!-- Main Content -->
         <main class="main-content">
             @yield('content')
         </main>
     </div>
-    @endif
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
