@@ -48,7 +48,7 @@
             font-weight: bold;
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         
         .sidebar .nav-link i {
@@ -68,7 +68,7 @@
 </head>
 <body>
     <header>
-        <h1>Student Clinic Scheduler</h1>
+        <h1></h1>
         <form action="{{ route('admin.logout') }}" method="POST" style="display: inline;">
             @csrf
             <button type="submit" class="btn btn-danger btn-sm">Logout</button>
