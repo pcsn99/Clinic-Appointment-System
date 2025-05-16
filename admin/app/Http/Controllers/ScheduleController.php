@@ -7,9 +7,10 @@ use App\Models\Schedule;
 
 class ScheduleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $schedules = Schedule::orderBy('date')->orderBy('start_time')->get();
+        $perPage = 6; // Set to display 6 items per page
+        $schedules = Schedule::orderBy('date')->orderBy('start_time')->paginate($perPage);
         return view('schedules.index', compact('schedules'));
     }
 
