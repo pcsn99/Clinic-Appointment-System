@@ -1,113 +1,111 @@
 @extends('layouts.app')
 
 @section('content')
-<h2>Upcoming Appointments</h2>
+    <div class="container" style="max-width: 1200px;">
+        {{-- Styled Title Box --}}
+        <div class="text-center mb-4 p-3 rounded" style="background-color: #162163; color: white; font-weight: bold; font-size: 24px;">
+            Upcoming Appointments
+        </div>
 
-@if(session('success'))
-    <p style="color: green">{{ session('success') }}</p>
-@endif
-@if(session('error'))
-    <p style="color: red">{{ session('error') }}</p>
-@endif
+        {{-- Row Layout for Calendar and Table --}}
+        <div class="row">
+            {{-- 📅 FullCalendar (Left Side) --}}
+            <div class="col-md-6">
+                <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css' rel='stylesheet' />
+                <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
 
-{{-- 📅 FullCalendar --}}
-<link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css' rel='stylesheet' />
-<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+                <div id="calendar" style="width: 100%; border: 1px solid #ccc; padding: 10px;"></div>
+            </div>
 
-<div id="calendar" style="max-width: 900px; margin: 30px auto; border: 1px solid #ccc; padding: 10px;"></div>
+            {{-- 📝 Appointment Table (Right Side) --}}
+            <div class="col-md-6">
+                <div class="p-3 border rounded" style="background-color: white;">
+                    <h5 class="text-center">Appointments for <span id="selectedDate">Select a date</span></h5>
 
-{{-- 📋 Modal for Slot Info --}}
-<div class="modal fade" id="slotModal" tabindex="-1" aria-labelledby="slotModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Schedules on <span id="modalDate"></span></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body" id="slotModalBody">Loading...</div>
-    </div>
-  </div>
-</div>
-
-{{-- 📝 Appointment Table --}}
-<table class="table table-bordered mt-4">
-    <thead>
-        <tr>
-            <th>Student</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Status</th>
-            <th>Present</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @forelse($appointments as $appt)
-            <tr>
-                <td>{{ $appt->user->name }}</td>
-                <td>{{ $appt->schedule->date }}</td>
-                <td>{{ $appt->schedule->start_time }} - {{ $appt->schedule->end_time }}</td>
-                <td>
-                    @if($appt->status === 'booked')
-                        <span class="badge bg-warning text-dark">Booked</span>
-                    @elseif($appt->status === 'completed')
-                        <span class="badge bg-success">Present</span>
-                    @elseif($appt->status === 'cancelled')
-                        <span class="badge bg-danger">Cancelled</span>
+                    {{-- Success/Error Messages --}}
+                    @if(session('success'))
+                        <div class="alert alert-success text-center">{{ session('success') }}</div>
                     @endif
-                </td>
-                <td>{{ $appt->is_present ? 'Yes' : 'No' }}</td>
-                <td>
-                    <form method="POST" action="{{ route('admin.appointments.mark', $appt->id) }}">
-                        @csrf
-                        <input type="hidden" name="is_present" value="{{ $appt->is_present ? 0 : 1 }}">
-                        <button type="submit" class="btn btn-sm {{ $appt->is_present ? 'btn-secondary' : 'btn-success' }}"
-                                onclick="return confirm('{{ $appt->is_present ? 'Revert to Booked?' : 'Mark as Present?' }}')">
-                            {{ $appt->is_present ? 'Revert' : 'Mark Present' }}
-                        </button>
-                    </form>
-                </td>
-            </tr>
-        @empty
-            <tr>
-                <td colspan="6">No upcoming appointments found.</td>
-            </tr>
-        @endforelse
-    </tbody>
-</table>
+                    @if(session('error'))
+                        <div class="alert alert-danger text-center">{{ session('error') }}</div>
+                    @endif
 
-{{-- 📆 FullCalendar Script --}}
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        let calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
-            initialView: 'dayGridMonth',
-            events: '/appointments/calendar-events',
-            eventClick: function (info) {
-                const date = info.event.startStr;
-                document.getElementById('modalDate').textContent = date;
-                document.getElementById('slotModalBody').innerHTML = 'Loading...';
+                    <table class="table table-bordered">
+                        <thead class="text-white text-center" style="background-color: #162163;">
+                            <tr>
+                                <th>Student</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Present</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointmentsTable">
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">No appointments selected.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                fetch(`/appointments/schedules-by-date?date=${date}`)
-                    .then(res => res.json())
-                    .then(slots => {
-                        if (slots.length === 0) {
-                            document.getElementById('slotModalBody').innerHTML = `<p>No schedules for this day.</p>`;
-                        } else {
-                            const html = slots.map(slot => `
-                                <div style="margin-bottom: 10px">
-                                    <strong>${slot.start_time} - ${slot.end_time}</strong> |
-                                    Booked: ${slot.booked} / ${slot.slot_limit}
-                                </div>
-                            `).join('');
-                            document.getElementById('slotModalBody').innerHTML = html;
-                        }
-                    });
+    {{-- 📆 FullCalendar Script --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+                initialView: 'dayGridMonth',
+                events: '/appointments/calendar-events',
+                dateClick: function (info) {
+                    const date = info.dateStr;
+                    document.getElementById('selectedDate').textContent = date;
+                    document.getElementById('appointmentsTable').innerHTML = '<tr><td colspan="5" class="text-center">Loading...</td></tr>';
 
-                new bootstrap.Modal(document.getElementById('slotModal')).show();
-            }
+                    fetch(`/appointments/schedules-by-date?date=${date}`)
+                        .then(res => {
+                            if (!res.ok) {
+                                throw new Error("Failed to fetch appointments.");
+                            }
+                            return res.json();
+                        })
+                        .then(appointments => {
+                            if (!Array.isArray(appointments) || appointments.length === 0) {
+                                document.getElementById('appointmentsTable').innerHTML = '<tr><td colspan="5" class="text-center text-muted">No appointments found.</td></tr>';
+                            } else {
+                                const rows = appointments.map(appt => `
+                                    <tr class="text-center">
+                                        <td>${appt.student_name}</td>
+                                        <td>${appt.start_time} - ${appt.end_time}</td>
+                                        <td>
+                                            <span class="badge ${appt.status === 'booked' ? 'bg-warning text-dark' : appt.status === 'completed' ? 'bg-success' : 'bg-danger'}">
+                                                ${appt.status.charAt(0).toUpperCase() + appt.status.slice(1)}
+                                            </span>
+                                        </td>
+                                        <td>${appt.is_present ? 'Yes' : 'No'}</td>
+                                        <td>
+                                            <form method="POST" action="/admin/appointments/${appt.id}/mark">
+                                                @csrf
+                                                <input type="hidden" name="is_present" value="${appt.is_present ? 0 : 1}">
+                                                <button type="submit" class="btn btn-sm ${appt.is_present ? 'btn-secondary' : 'btn-success'}"
+                                                        onclick="return confirm('${appt.is_present ? 'Revert to Booked?' : 'Mark as Present?'}')">
+                                                    ${appt.is_present ? 'Revert' : 'Mark Present'}
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                `).join('');
+
+                                document.getElementById('appointmentsTable').innerHTML = rows;
+                            }
+                        })
+                        .catch(error => {
+                            document.getElementById('appointmentsTable').innerHTML = `<tr><td colspan="5" class="text-center text-danger">${error.message}</td></tr>`;
+                        });
+                }
+            });
+
+            calendar.render();
         });
-
-        calendar.render();
-    });
-</script>
+    </script>
 @endsection
