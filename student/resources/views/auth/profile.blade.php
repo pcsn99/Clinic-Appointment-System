@@ -1,56 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-
-<div class="container mt-5">
-    <div class="card info-card">
-        <div class="title-box">
-            <h2 class="fw-bold display-4">Account Details</h2>
-        </div>
-                <div class="card-body">
-                    @if (session('success'))
-                        <div class="alert alert-success">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-
-                    <div class="student-details">
-                        <table class="details-table">
-                            <tr>
-                                <td class="detail-label">Name:</td>
-                                <td class="detail-value">{{ $user->name }}</td>
-                            </tr>
-                            <tr>
-                                <td class="detail-label">Username:</td>
-                                <td class="detail-value">{{ $user->username }}</td>
-                            </tr>
-                            <tr>
-                                <td class="detail-label">Email:</td>
-                                <td class="detail-value">{{ $user->email }}</td>
-                            </tr>
-                            <tr>
-                                <td class="detail-label">Course:</td>
-                                <td class="detail-value">{{ $user->course }}</td>
-                            </tr>
-                            <tr>
-                                <td class="detail-label">Year:</td>
-                                <td class="detail-value">{{ $user->year }}</td>
-                            </tr>
-                            <tr>
-                                <td class="detail-label">Contact Number:</td>
-                                <td class="detail-value">{{ $user->contact_number }}</td>
-                            </tr>
-                        </table>
-                    </div>
-
-                    <div class="text-center my-4">
-                        <a href="{{ route('account.edit') }}" class="btn btn-primary btn-lg action-btn">
-                            <i class="bi bi-pencil-square"></i> Edit Profile
-                        </a>
-                    </div>
-    </div>
-</div>
-
 <style>
     .container {
         max-width: 1000px;
@@ -129,42 +79,55 @@
     }
 </style>
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Student Profile</div>
-
-                <div class="card-body">
-                    <div class="mb-3">
-                        <h4>{{ $student->name }}</h4>
-                        <p class="text-muted">{{ $student->username }}</p>
-                    </div>
-
-                    <div class="mb-3">
-                        <strong>Email:</strong> {{ $student->email }}
-                    </div>
-
-                    <div class="mb-3">
-                        <strong>Course:</strong> {{ $student->course }}
-                    </div>
-
-                    <div class="mb-3">
-                        <strong>Year:</strong> {{ $student->year }}
-                    </div>
-
-                    <div class="mb-3">
-                        <strong>Contact Number:</strong> {{ $student->contact_number }}
-                    </div>
-
-                    <div class="mt-4">
-                        <a href="{{ route('profile.edit') }}" class="btn btn-primary">Edit Profile</a>
-                        <a href="{{ route('dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
-                    </div>
-                </div>
-            </div>
+<div class="container mt-5">
+    <div class="card info-card">
+        <div class="title-box">
+            <h2 class="fw-bold display-4">Account Details</h2>
         </div>
+                <div class="card-body">
+                    @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    <div class="student-details">
+                        <table class="details-table">
+                            <tr>
+                                <td class="detail-label">Name:</td>
+                                <td class="detail-value">{{ $student->name }}</td>
+                            </tr>
+                            <tr>
+                                <td class="detail-label">studentname:</td>
+                                <td class="detail-value">{{ $student->studentname }}</td>
+                            </tr>
+                            <tr>
+                                <td class="detail-label">Email:</td>
+                                <td class="detail-value">{{ $student->email }}</td>
+                            </tr>
+                            <tr>
+                                <td class="detail-label">Course:</td>
+                                <td class="detail-value">{{ $student->course }}</td>
+                            </tr>
+                            <tr>
+                                <td class="detail-label">Year:</td>
+                                <td class="detail-value">{{ $student->year }}</td>
+                            </tr>
+                            <tr>
+                                <td class="detail-label">Contact Number:</td>
+                                <td class="detail-value">{{ $student->contact_number }}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="text-center my-4">
+                        <a href="{{ route('profile.edit') }}" class="btn btn-primary btn-lg action-btn">
+                            <i class="bi bi-pencil-square"></i> Edit Profile
+                        </a>
+                    </div>
     </div>
 </div>
+
+
 
 @endsection
