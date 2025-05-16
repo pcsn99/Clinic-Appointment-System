@@ -49,21 +49,11 @@
                     </ul>
                 @endif
 
-                @if(!$currentBooking || !$currentBooking->is_present)
-                    <div class="text-center my-4">
-                        <a href="{{ route('student.appointments.index') }}" class="btn btn-primary btn-lg mx-2">📅 Book Appointment</a>
-                    </div>
-                @endif
+
             </div>
         </div>
     </div>
 
-    <!-- Logout Button -->
-    <div class="text-center mt-4">
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="btn btn-danger btn-lg mx-2">Logout</button>
-        </form>
-    </div>
+
 </div>
 @endsection

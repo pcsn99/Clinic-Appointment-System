@@ -65,9 +65,58 @@
                                     </form>
                                 </td>
                             </tr>
+
+                        </thead>
+                        <tbody>
+                            @forelse($schedules as $schedule)
+                                <tr style="text-align: center;">
+                                    <td><input type="checkbox" form="bulkDeleteForm" name="selected[]" value="{{ $schedule->id }}"></td>
+                                    <td>{{ $schedule->date }}</td>
+                                    <td>{{ $schedule->start_time }}</td>
+                                    <td>{{ $schedule->end_time }}</td>
+                                    <td>{{ $schedule->slot_limit }}</td>
+                                    <td>
+                                        <a href="{{ route('schedules.edit', $schedule) }}" class="btn btn-sm text-white"
+                                           style="background-color: #162163; border-radius: 4px; font-weight: bold;">Edit</a>
+                                        <form method="POST" action="{{ route('schedules.bulk.delete') }}" style="display:inline;">
+                                            @csrf
+                                            <input type="hidden" name="selected[]" value="{{ $schedule->id }}">
+                                            <button type="submit" class="btn btn-danger btn-sm"
+                                                    onclick="return confirmDelete('{{ $schedule->date }}')"
+                                                    style="border-radius: 4px; font-weight: bold;">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted" style="font-style: italic;">No schedules found.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination Information -->
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div class="text-muted">
+                        Showing {{ $schedules->firstItem() ?? 0 }} to {{ $schedules->lastItem() ?? 0 }} of {{ $schedules->total() }} entries
+                    </div>
+                    
+                    <!-- Pagination Controls -->
+                    <div class="pagination justify-content-end">
+                        {{ $schedules->appends(request()->query())->links('pagination::bootstrap-4') }}
+                    </div>
+                </div>
+            </form>
+
+            <div class="text-center mt-3">
+                <button type="submit" form="bulkDeleteForm" class="btn btn-danger px-5 py-2" id="bulkDeleteBtn" disabled
+                        style="border-radius: 6px; font-weight: bold;">Delete Selected</button>
+
                         @endforeach
                     </tbody>
                 </table>
+
             </div>
         </form>
 
