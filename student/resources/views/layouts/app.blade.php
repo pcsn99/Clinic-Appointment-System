@@ -109,9 +109,9 @@
     </style>
 </head>
 <body>
-
     @auth
     <header>
+        <h1 class="me-auto">Student Clinic Scheduler</h1>
         <div class="nav-buttons">
             <button id="notificationBell">
                 <i class="bi bi-bell"></i> <!-- Bootstrap icon used -->
@@ -136,6 +136,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('profile') }}">
                         <i class="bi bi-person"></i> Account
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('student.appointments.index') }}">
+                        <i class="bi bi-calendar-plus"></i> Book Appointment
                     </a>
                 </li>
             </ul>
@@ -194,6 +199,9 @@
         });
     </script>
 
+    <!-- Bootstrap JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
     @stack('scripts') 
 </body>
 </html>

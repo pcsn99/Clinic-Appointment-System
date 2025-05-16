@@ -1,31 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-    <h2>Welcome, {{ session('admin')->name }}</h2>
-    <p>You are logged in as <strong>{{ session('admin')->username }}</strong>.</p>
-
-    <hr>
-
-    <h3>Manage System</h3>
-
-    <a href="{{ route('schedules.index') }}">
-        <button>📅 Go to Schedule Management</button>
-    </a>
-    <br><br>
-
-    <a href="{{ route('admin.appointments.create') }}">
-        <button>➕ Make Appointment for Student</button>
-    </a>
-    <br><br>
-
-    <a href="{{ route('admin.appointments.index') }}">
-        <button>📋 View Appointments</button>
-    </a>
-    <br><br>
-
-    <a href="{{ route('admin.students.index') }}">
-        <button>👥 View Student Accounts</button>
-    </a>
+<div>
+    <h2>Welcome, Clinic Admin</h2>
+    <p>You are logged in as <strong>{{ session('admin')->username }}</strong></p>
 
     <hr>
 
@@ -73,9 +51,5 @@
         <li><strong>Attendance PIN:</strong> {{ $attendancePin->pin_code ?? 'Not Set' }}</li>
         <li><strong>Slot Limit Override PIN:</strong> {{ $overridePin->pin_code ?? 'Not Set' }}</li>
     </ul>
-
-    <form method="POST" action="{{ route('admin.logout') }}">
-        @csrf
-        <button type="submit">Logout</button>
-    </form>
+</div>
 @endsection
