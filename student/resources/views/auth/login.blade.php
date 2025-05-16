@@ -3,6 +3,25 @@
 @section('body_background', "url('" . asset('src/xu.png') . "') no-repeat center center fixed")
 
 @section('content')
+<style>
+    body {
+        position: relative;
+        background: url('{{ asset('src/xu.png') }}') no-repeat center center fixed;
+        background-size: cover;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.3); 
+        z-index: -1; 
+    }
+</style>
+
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">

@@ -10,7 +10,7 @@
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {{ session('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
+                </div>a
             @endif
 
             <h2>Welcome, {{ Auth::user()->name }}</h2>
@@ -171,82 +171,6 @@
     <button type="submit" class="btn btn-danger">Logout</button>
 </form>
 
-<style>
-    .container {
-        max-width: 1000px;
-    }
-
-    .card {
-        border: none;
-        border-radius: 12px;
-        padding: 40px;
-        margin-bottom: 30px;
-        background-color: #f8f9fa;
-    }
-
-    .info-card {
-        text-align: center;
-        background-color: #ffffff;
-        border: 2px solid #dcdcdc;
-    }
-
-    .appointment-card {
-        background-color: #e9f5ff;
-        border-left: 8px solid #17224D;
-    }
-
-    .schedule-card {
-        background-color: #fef9e7;
-        border-left: 8px solid #17224D;
-    }
-
-    .info-section, .appointment-details {
-        font-size: 22px;
-        color: #333;
-    }
-
-    .list-group-item {
-        background-color: transparent;
-        border: none;
-        padding: 16px;
-    }
-
-    .action-btn {
-        width: 100%;
-        padding: 16px;
-        font-size: 20px;
-        font-weight: bold;
-        border-radius: 12px;
-    }
-
-    .btn-primary {
-        background-color: #17224D;
-        border-color: #17224D;
-    }
-
-    .btn-danger {
-        background-color: #dc3545;
-        border-color: #dc3545;
-    }
-
-    .btn-success {
-        background-color: #17224D;
-    }
-
-    .btn-secondary {
-        background-color: #6c757d;
-        border-color: #6c757d;
-    }
-
-    .welcome-heading {
-        color: #17224D;
-    }
-
-    .current-appointment {
-        color: #17224D;
-    }
-</style>
 
 
 @endsection
-
