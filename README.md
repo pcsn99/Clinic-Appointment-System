@@ -148,7 +148,7 @@ DB_PASSWORD=your_secure_password
 
 ### Final Setup Steps
 
-**In both admin and member folders**
+**In both admin and student folders**
 ```bash
 php artisan key:generate
 php artisan storage:link
