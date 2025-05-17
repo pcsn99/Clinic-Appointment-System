@@ -16,16 +16,15 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <style>
-        /* Top bar - Reduced height */
         @auth
         header {
             background-color: #17224D;
             color: white;
-            padding: 8px 15px; /* Reduced padding */
+            padding: 8px 15px;
             display: flex;
             justify-content: flex-end;
-            align-items: center; /* Ensures vertical alignment */
-            height: 45px; /* Set fixed smaller height */
+            align-items: center;
+            height: 45px;
             position: fixed;
             top: 0;
             left: 0;
@@ -37,6 +36,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            position: relative;
         }
 
         #notificationBell {
@@ -44,15 +44,13 @@
             align-items: center;
             background: none;
             border: none;
-            font-size: 18px; /* Adjusted for smaller layout */
+            font-size: 18px;
             position: relative;
             color: white;
         }
 
         #notificationBell i {
-            font-size: 18px; /* Slightly smaller */
-            color: white;
-            display: inline-block;
+            font-size: 18px;
         }
 
         #notificationCount {
@@ -62,21 +60,31 @@
             font-size: 12px;
         }
 
+        #notificationDropdown {
+            display: none;
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background: white;
+            border: 1px solid #ccc;
+            width: 300px;
+            z-index: 1000;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
         .logout-btn {
             padding: 5px 12px;
             font-size: 14px;
         }
-        @endauth
 
-        /* Sidebar */
-        @auth
         .sidebar {
             width: 250px;
             height: 100vh;
             position: fixed;
             background-color: #17224D;
             padding: 20px;
-            top: 45px; /* Adjusted to match reduced header height */
+            top: 45px;
             color: white;
         }
 
@@ -103,7 +111,7 @@
 
         .main-content {
             margin-left: 250px;
-            padding: 65px 20px 20px; /* Adjusted padding to fit new header size */
+            padding: 65px 20px 20px;
         }
         @endauth
     </style>
@@ -112,11 +120,19 @@
     @auth
     <header>
         <div class="nav-buttons">
-            <button id="notificationBell">
-                <i class="bi bi-bell"></i> <!-- Bootstrap icon used -->
-                <span id="notificationCount" class="badge bg-danger"></span>
-            </button>
+            <!-- Notification Bell -->
+            <div style="position: relative;">
+                <button id="notificationBell">
+                    <i class="bi bi-bell"></i>
+                    <span id="notificationCount" class="badge bg-danger"></span>
+                </button>
 
+                <div id="notificationDropdown">
+                    <ul id="notificationList" class="list-group list-group-flush" style="max-height: 300px; overflow-y: auto;"></ul>
+                </div>
+            </div>
+
+            <!-- Logout -->
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button type="submit" class="btn btn-sm btn-danger logout-btn">Logout</button>
@@ -150,13 +166,12 @@
         </main>
     </div>
     @else
-    <div>
-        <main class="main-content">
-            @yield('content')
-        </main>
-    </div>
+    <main class="main-content">
+        @yield('content')
+    </main>
     @endauth
 
+    <!-- Notification Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const bell = document.getElementById('notificationBell');
@@ -179,13 +194,18 @@
                             const item = document.createElement('li');
                             item.className = 'list-group-item';
                             item.innerHTML = `<strong>${n.title}</strong><br><small>${n.message}</small>`;
-                            if (!n.is_read) unreadCount++;
+                            if (!n.is_read) {
+                                item.classList.add('bg-light');
+                                unreadCount++;
+                            }
+
                             item.addEventListener('click', () => {
                                 fetch(`/notifications/${n.id}/read`, {
                                     method: 'POST',
                                     headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') }
                                 }).then(() => loadNotifications());
                             });
+
                             list.appendChild(item);
                         });
 
@@ -194,13 +214,12 @@
             }
 
             loadNotifications();
-            setInterval(loadNotifications, 30000); 
+            setInterval(loadNotifications, 30000);
         });
     </script>
 
-    <!-- Bootstrap JavaScript Bundle with Popper -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    
     @stack('scripts') 
 </body>
 </html>

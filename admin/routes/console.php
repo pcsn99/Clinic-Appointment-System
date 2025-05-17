@@ -12,3 +12,10 @@ Artisan::command('inspire', function () {
 return function (Schedule $schedule) {
     $schedule->command('app:smart-reschedule')->hourly();
 };
+
+
+
+return function (Schedule $schedule) {
+    $schedule->command('app:mark-missed-appointments')->hourly();
+};
+

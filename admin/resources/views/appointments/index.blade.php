@@ -25,7 +25,7 @@
 
         {{-- Row Layout for Calendar and Table --}}
         <div class="row">
-            {{-- 📅 FullCalendar (Left Side) --}}
+            {{-- FullCalendar (Left Side) --}}
             <div class="col-md-6">
                 <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css' rel='stylesheet' />
                 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
@@ -33,7 +33,7 @@
                 <div id="calendar" style="width: 100%; border: 1px solid #ccc; padding: 10px;"></div>
             </div>
 
-            {{-- 📝 Appointment Table (Right Side) --}}
+            {{-- Appointment Table (Right Side) --}}
             <div class="col-md-6">
                 <div class="p-3 border rounded" style="background-color: white;">
                     <h5 class="text-center">Appointments for <span id="selectedDate">Select a date</span></h5>
@@ -83,7 +83,7 @@
                             <i class="bi bi-chevron-left"></i> Previous
                         </button>
                         <div id="paginationPages" class="btn-group">
-                            <!-- Page buttons will be inserted here -->
+                           
                         </div>
                         <button id="nextPage" class="btn btn-sm btn-secondary" disabled>
                             Next <i class="bi bi-chevron-right"></i>
@@ -96,7 +96,7 @@
     </div>
 </div>
 
-    {{-- 📆 FullCalendar Script --}}
+    {{-- FullCalendar Script --}}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             let calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
@@ -122,12 +122,12 @@
                                 document.getElementById('nextPage').disabled = true;
                                 document.getElementById('paginationPages').innerHTML = '';
                             } else {
-                                // Store all appointments in a variable for pagination
+                                
                                 let allAppointments = appointments;
                                 let currentPage = 1;
                                 let itemsPerPage = parseInt(document.getElementById('appointmentsPerPage').value);
                                 
-                                // Function to generate appointment row HTML
+                                
                                 function generateAppointmentRow(appt) {
                                     return `
                                         <tr class="text-center">
@@ -153,31 +153,31 @@
                                     `;
                                 }
                                 
-                                // Function to render appointments for the current page
+                                
                                 function renderAppointments() {
                                     const startIndex = (currentPage - 1) * itemsPerPage;
                                     const endIndex = Math.min(startIndex + itemsPerPage, allAppointments.length);
                                     const paginatedAppointments = allAppointments.slice(startIndex, endIndex);
                                     
-                                    // Update pagination info text
+                                    
                                     document.getElementById('paginationInfo').textContent = 
                                         `Showing ${startIndex + 1} to ${endIndex} of ${allAppointments.length} entries`;
                                     
-                                    // Generate table rows
+                                    
                                     const rows = paginatedAppointments.map(generateAppointmentRow).join('');
                                     document.getElementById('appointmentsTable').innerHTML = rows;
                                     
-                                    // Update pagination buttons
+                                    
                                     updatePaginationButtons();
                                 }
                                 
-                                // Function to update pagination buttons
+                                
                                 function updatePaginationButtons() {
                                     const totalPages = Math.ceil(allAppointments.length / itemsPerPage);
                                     document.getElementById('prevPage').disabled = currentPage === 1;
                                     document.getElementById('nextPage').disabled = currentPage === totalPages;
                                     
-                                    // Generate page number buttons
+                                   
                                     let pagesHTML = '';
                                     for (let i = 1; i <= totalPages; i++) {
                                         pagesHTML += `<button class="btn btn-sm ${currentPage === i ? 'btn-primary' : 'btn-outline-secondary'}" 
@@ -186,13 +186,13 @@
                                     document.getElementById('paginationPages').innerHTML = pagesHTML;
                                 }
                                 
-                                // Function to change page
+                              
                                 window.setPage = function(page) {
                                     currentPage = page;
                                     renderAppointments();
                                 };
                                 
-                                // Set up event listeners for pagination controls
+                               
                                 document.getElementById('prevPage').addEventListener('click', function() {
                                     if (currentPage > 1) {
                                         currentPage--;
@@ -210,11 +210,11 @@
                                 
                                 document.getElementById('appointmentsPerPage').addEventListener('change', function() {
                                     itemsPerPage = parseInt(this.value);
-                                    currentPage = 1; // Reset to first page when changing items per page
+                                    currentPage = 1; 
                                     renderAppointments();
                                 });
                                 
-                                // Initial render
+                                
                                 renderAppointments();
                             }
                         })

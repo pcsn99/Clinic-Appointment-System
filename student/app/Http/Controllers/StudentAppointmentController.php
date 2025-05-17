@@ -9,6 +9,9 @@ use App\Models\Appointment;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\AppointmentBooked;
+use App\Notifications\AppointmentCancelled;
+use App\Notifications\AppointmentMarkedPresent;
 
 class StudentAppointmentController extends Controller
 {
@@ -83,10 +86,14 @@ class StudentAppointmentController extends Controller
         $userId = Auth::id();
 
         
-        $existing = Appointment::where('user_id', $userId)->first();
+        $existing = Appointment::where('user_id', $userId)
+            ->where('status', 'booked')
+            ->first();
+
         if ($existing) {
             return back()->with('error', 'You already have a booking. Please cancel it first.');
         }
+
 
         $schedule = Schedule::withCount('appointments')->findOrFail($request->schedule_id);
 
@@ -109,12 +116,7 @@ class StudentAppointmentController extends Controller
             'status' => 'booked',
         ]);
 
-        Notification::create([
-            'notifiable_type' => 'App\Models\User',
-            'notifiable_id' => $userId,
-            'title' => 'Appointment Booked',
-            'message' => "Your appointment has been successfully booked for {$schedule->date} at {$schedule->start_time}.",
-        ]);
+        Auth::user()->notify(new AppointmentBooked($schedule));
 
         return back()->with('success', 'Appointment successfully booked.');
     }
@@ -127,12 +129,7 @@ class StudentAppointmentController extends Controller
             return back()->with('error', 'Cannot cancel an appointment already marked as present.');
         }
 
-        Notification::create([
-            'notifiable_type' => 'App\Models\User',
-            'notifiable_id' => Auth::id(),
-            'title' => 'Appointment Cancelled',
-            'message' => 'Your appointment has been cancelled.',
-        ]);
+        Auth::user()->notify(new AppointmentCancelled);
 
         $appt->delete();
 
@@ -186,12 +183,7 @@ class StudentAppointmentController extends Controller
             'status' => 'completed'
         ]);
 
-        Notification::create([
-            'notifiable_type' => 'App\Models\User',
-            'notifiable_id' => $appointment->user_id,
-            'title' => 'Marked Present',
-            'message' => 'You have been successfully marked as present.',
-        ]);
+        $appointment->user->notify(new AppointmentMarkedPresent);
 
         return back()->with('success', 'You have been marked as present.');
     }

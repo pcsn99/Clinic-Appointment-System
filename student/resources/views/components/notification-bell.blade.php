@@ -93,6 +93,7 @@
                             item.className = 'list-group-item';
                             item.innerHTML = `<strong>${n.title}</strong><br><small>${n.message}</small>`;
 
+
                             if (!n.is_read) {
                                 item.classList.add('unread-notification'); // Highlight unread notifications
                                 unreadCount++;

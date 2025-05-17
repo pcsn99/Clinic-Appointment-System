@@ -13,6 +13,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
+use App\Notifications\AppointmentBookedByAdmin;
+use App\Notifications\AppointmentMarkedPresentOrReverted;
+use App\Notifications\AppointmentRebooked;
+use App\Notifications\AppointmentCancelledFromReschedule;
+
+
 class AdminAppointmentController extends Controller
 {
     public function create(Request $request)
@@ -23,14 +29,14 @@ class AdminAppointmentController extends Controller
         if ($request->has('search')) {
             $search = $request->input('search');
             
-            // Only search if the search term is not empty
+            
             if (!empty(trim($search))) {
                 $users = User::where('name', 'like', "%{$search}%")
                             ->orWhere('email', 'like', "%{$search}%")
                             ->orWhere('username', 'like', "%{$search}%")
                             ->get();
             } else {
-                // Return to the page without showing any results if search is empty
+                
                 $users = collect([]);
             }
         }
@@ -69,14 +75,12 @@ class AdminAppointmentController extends Controller
             'status' => 'booked',
         ]);
 
-        Notification::create([
-            'notifiable_id' => $request->user_id,
-            'notifiable_type' => 'App\Models\User',
-            'title' => 'Appointment Booked by Admin',
-            'message' => 'You have been booked for an appointment by the clinic.',
-        ]);
+        $user = User::find($request->user_id);
+        $user->notify(new AppointmentBookedByAdmin());
 
-        // Return to the same page with success message instead of redirecting
+        Log::info("Admin booked appointment for user_id: {$user->id} on schedule_id: {$request->schedule_id}");
+
+       
         return back()->with('appointment_success', 'Appointment booked successfully.');
     }
 
@@ -110,14 +114,10 @@ class AdminAppointmentController extends Controller
         $appointment->status = $value ? 'completed' : 'booked';
         $appointment->save();
 
-        Notification::create([
-            'notifiable_id' => $appointment->user_id,
-            'notifiable_type' => 'App\Models\User',
-            'title' => $value ? 'Marked Present' : 'Attendance Reverted',
-            'message' => $value 
-                ? 'You have been marked as present by the clinic.'
-                : 'Your attendance status was reverted by the clinic.',
-        ]);
+        $appointment->user->notify(new AppointmentMarkedPresentOrReverted($value));
+
+        Log::info("✅ Marked appointment #{$appointment->id} for user_id: {$appointment->user_id} as " . ($value ? 'present' : 'not present'));
+
     
         return back()->with('success', 'Attendance updated.');
     }
@@ -167,7 +167,7 @@ class AdminAppointmentController extends Controller
     {
         $date = $request->date;
         
-        // Get appointments for the selected date with student information
+       
         $appointments = Appointment::whereHas('schedule', function($query) use ($date) {
             $query->where('date', $date);
         })
@@ -179,7 +179,7 @@ class AdminAppointmentController extends Controller
                 'student_name' => $appointment->user->name ?? 'Unknown',
                 'start_time' => $appointment->schedule->start_time ?? '',
                 'end_time' => $appointment->schedule->end_time ?? '',
-                'status' => $appointment->status ?? 'booked', // Default to 'booked' if status is null
+                'status' => $appointment->status ?? 'booked', 
                 'is_present' => $appointment->is_present ?? false,
             ];
         });
@@ -210,7 +210,7 @@ class AdminAppointmentController extends Controller
     
             Log::info("⏱ Checking appointment for user: {$user->name} | Scheduled at: {$originalSchedule->start_time} - {$originalSchedule->end_time}");
     
-            // Look for later available schedule
+            
             $available = Schedule::whereDate('date', $today)
                 ->where('start_time', '>', $originalSchedule->end_time)
                 ->withCount('appointments')
@@ -223,26 +223,16 @@ class AdminAppointmentController extends Controller
                 $appointment->schedule_id = $available->id;
                 $appointment->save();
     
-                Log::info("✅ Rebooked user '{$user->name}' to new time slot: {$available->start_time} - {$available->end_time}");
+                Log::info("Rebooked user '{$user->name}' to new time slot: {$available->start_time} - {$available->end_time}");
     
-                Notification::create([
-                    'notifiable_id' => $user->id,
-                    'notifiable_type' => 'App\Models\User',
-                    'title' => 'Rebooked Due to Absence',
-                    'message' => "You missed your appointment and have been rebooked today at {$available->start_time} - {$available->end_time}.",
-                ]);
+                $user->notify(new AppointmentRebooked($available));
             } else {
                 $appointment->status = 'cancelled';
                 $appointment->save();
     
-                Log::warning("❌ Could not rebook '{$user->name}' - all slots full. Appointment cancelled.");
+                Log::warning("Could not rebook '{$user->name}' - all slots full. Appointment cancelled.");
     
-                Notification::create([
-                    'notifiable_id' => $user->id,
-                    'notifiable_type' => 'App\Models\User',
-                    'title' => 'Appointment Cancelled',
-                    'message' => "You missed your appointment and all other slots today are full. Please rebook.",
-                ]);
+        $user->notify(new AppointmentCancelledFromReschedule());
             }
         }
     

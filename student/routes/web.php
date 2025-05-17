@@ -34,8 +34,9 @@ Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
 Route::get('/profile/edit', [AuthController::class, 'editProfile'])->name('profile.edit');
 Route::put('/profile/update', [AuthController::class, 'updateProfile'])->name('profile.update');
 
-    Route::get('/notifications', [NotificationController::class, 'index']);
-    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+//notifs routes
+Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index']);
+Route::post('/notifications/{id}/read', [App\Http\Controllers\NotificationController::class, 'markAsRead']);
     
     // Account routes
 
