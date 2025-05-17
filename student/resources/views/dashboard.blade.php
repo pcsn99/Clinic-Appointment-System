@@ -32,7 +32,7 @@
             </div>
         </div>
 
-        <!-- Today's Available Schedules Section -->
+       
         <div class="col-md-6">
             <div class="card schedule-card text-center p-4" style="border: 2px solid #17224D;">
                 <h4 class="fw-bold display-5">Today's Available Schedules</h4>
