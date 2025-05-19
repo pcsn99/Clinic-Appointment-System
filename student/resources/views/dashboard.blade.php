@@ -5,6 +5,7 @@
 <div class="container mt-5">
     <div class="card info-card text-center p-4" style="background-color: #17224D; color: white;">
         <h2 class="fw-bold display-4">Welcome, {{ Auth::user()->name }}</h2>
+
         <p class="mb-0">Logged in as <strong>{{ Auth::user()->username }}</strong> | {{ Auth::user()->email }}</p>
         <p class="mb-0">Course: {{ Auth::user()->course }} | Year: {{ Auth::user()->year }} | Contact: {{ Auth::user()->contact_number }}</p>
     </div>
@@ -17,8 +18,13 @@
     @endif
 
     <div class="text-center my-4">
+
+        <!--<a href="{{ route('profile') }}" class="btn btn-primary mx-2">View Full Profile</a>
+        <a href="{{ route('profile.edit') }}" class="btn btn-outline-primary mx-2">Edit Profile</a>-->
+
         <!--a href="{{ route('profile') }}" class="btn btn-primary mx-2">View Full Profile</a>
         <a href="{{ route('profile.edit') }}" class="btn btn-outline-primary mx-2">Edit Profile</a-->
+
     </div>
 
     <div class="row mt-4">
@@ -45,9 +51,16 @@
                     <p class="text-muted fs-5">No current booking available.</p>
                 @endif
 
+
+                @if(!$currentBooking || !$currentBooking->is_present)
+                   <!--<a href="{{ route('student.appointments.index') }}" class="btn btn-primary mt-3">📅 Book Appointment</a>-->  
+                @endif
+
+
                 @if(!$currentBooking || !$currentBooking->is_present)
                     <!--a href="{{ route('student.appointments.index') }}" class="btn btn-primary mt-3">📅 Book Appointment</a-->
                 @endif
+
             </div>
         </div>
 
