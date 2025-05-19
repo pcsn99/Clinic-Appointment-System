@@ -4,6 +4,23 @@
 <div class="container mt-5">
     <div class="card info-card text-center p-4" style="background-color: #17224D; color: white;">
         <h2 class="fw-bold display-4">Welcome, {{ Auth::user()->name }}</h2>
+<<<<<<< Updated upstream
+=======
+        <p class="mb-0">Logged in as <strong>{{ Auth::user()->username }}</strong> | {{ Auth::user()->email }}</p>
+        <p class="mb-0">Course: {{ Auth::user()->course }} | Year: {{ Auth::user()->year }} | Contact: {{ Auth::user()->contact_number }}</p>
+    </div>
+
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    <div class="text-center my-4">
+        <!--<a href="{{ route('profile') }}" class="btn btn-primary mx-2">View Full Profile</a>
+        <a href="{{ route('profile.edit') }}" class="btn btn-outline-primary mx-2">Edit Profile</a>-->
+>>>>>>> Stashed changes
     </div>
 
     <div class="row mt-4">
@@ -29,6 +46,13 @@
                 @else
                     <p class="text-muted fs-5">No current booking available.</p>
                 @endif
+<<<<<<< Updated upstream
+=======
+
+                @if(!$currentBooking || !$currentBooking->is_present)
+                   <!--<a href="{{ route('student.appointments.index') }}" class="btn btn-primary mt-3">📅 Book Appointment</a>-->  
+                @endif
+>>>>>>> Stashed changes
             </div>
         </div>
 

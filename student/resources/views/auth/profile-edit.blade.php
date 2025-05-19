@@ -90,12 +90,32 @@
                         @enderror
                 </div>
 
-                 <div class="mb-3">
-                    <label for="course" class="form-label">Course</label>
-                    <input type="text" class="form-control @error('course') is-invalid @enderror" id="course" name="course" value="{{ old('course', $student->course) }}" required>
-                         @error('course')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                <div class="mb-3">
+                    <label for="college" class="form-label">Select College</label>
+                    <select class="form-control @error('college') is-invalid @enderror" id="college" name="college" required onchange="updateCourses()">
+                        <option value="">Select College</option>
+                        <option value="College of Arts and Sciences" {{ old('college', $student->college) == 'College of Arts and Sciences' ? 'selected' : '' }}>College of Arts and Sciences</option>
+                        <option value="School of Business and Management" {{ old('college', $student->college) == 'School of Business and Management' ? 'selected' : '' }}>School of Business and Management</option>
+                        <option value="School of Education" {{ old('college', $student->college) == 'School of Education' ? 'selected' : '' }}>School of Education</option>
+                        <option value="College of Engineering" {{ old('college', $student->college) == 'College of Engineering' ? 'selected' : '' }}>College of Engineering</option>
+                        <option value="College of Agriculture" {{ old('college', $student->college) == 'College of Agriculture' ? 'selected' : '' }}>College of Agriculture</option>
+                        <option value="College of Computer Studies" {{ old('college', $student->college) == 'College of Computer Studies' ? 'selected' : '' }}>College of Computer Studies</option>
+                        <option value="College of Nursing" {{ old('college', $student->college) == 'College of Nursing' ? 'selected' : '' }}>College of Nursing</option>
+                    </select>
+                    @error('college')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label for="course" class="form-label">Select Course</label>
+                    <select class="form-control @error('course') is-invalid @enderror" id="course" name="course" required>
+                        <option value="">Select Course</option>
+                        <!-- Courses will be populated by JavaScript -->
+                    </select>
+                    @error('course')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
 
                                         <div class="mb-3">
@@ -143,4 +163,76 @@
                 </div>
 
                
+<<<<<<< Updated upstream
+=======
+
+<script>
+    const coursesByCollege = {
+        "College of Arts and Sciences": [
+            "AB in Psychology", "AB in Sociology – General Track", "AB in Sociology – Development Studies Track",
+            "AB in Sociology – Advancement in Leadership (AL) Track", "AB in Literature (Track A: Literary and Cultural Studies)",
+            "AB in Literature (Track B: Literature Across the Professions)", "AB in English Language (Track 1: English Language Studies as Discipline)",
+            "AB in English Language (Track 2: English Language Across the Professions)", "AB in International Studies", "AB in History",
+            "AB in Economics", "AB in Philosophy – Pre Law Track", "AB in Philosophy – Pre Divinity Track", "Bachelor of Science in Psychology",
+            "Bachelor of Science in Biology", "Bachelor of Science in Development Communication", "Bachelor of Science in Marine Biology",
+            "Bachelor of Science in Mathematics", "Bachelor of Science in Chemistry"
+        ],
+        "School of Business and Management": [
+            "Bachelor of Science in Accountancy", "Bachelor of Science in Management Accounting",
+            "Bachelor of Science in Business Administration Major in Business Economics",
+            "Bachelor of Science in Business Administration Major in Financial Management",
+            "Bachelor of Science in Business Administration Major in Marketing Management"
+        ],
+        "School of Education": [
+            "Bachelor of Elementary Education", "Bachelor of Early Childhood Education",
+            "Bachelor of Special Needs Education - Generalist", "Bachelor of Secondary Education Major in English",
+            "Bachelor of Secondary Education Major in Mathematics", "Bachelor of Secondary Education Major in Science",
+            "Bachelor of Secondary Education Major in Social Studies"
+        ],
+        "College of Engineering": [
+            "Bachelor of Science in Chemical Engineering", "Bachelor of Science in Civil Engineering",
+            "Bachelor of Science in Electrical Engineering", "Bachelor of Science in Mechanical Engineering",
+            "Bachelor of Science in Electronics Engineering", "Bachelor of Science in Industrial Engineering"
+        ],
+        "College of Agriculture": [
+            "Bachelor of Science in Agribusiness", "Bachelor of Science in Agriculture Major in Animal Science",
+            "Bachelor of Science in Agriculture Major in Crop Science", "Bachelor of Science in Food Technology",
+            "Bachelor of Science in Agricultural and Biosystems Engineering"
+        ],
+        "College of Computer Studies": [
+            "Bachelor of Science in Computer Science", "Bachelor of Science in Entertainment and Multimedia Computing with specialization in Digital Animation Technology",
+            "Bachelor of Science in Information Systems", "Bachelor of Science in Information Technology"
+        ],
+        "College of Nursing": ["Bachelor of Science in Nursing"]
+    };
+
+    // Function to update courses based on selected college
+    function updateCourses() {
+        var collegeSelect = document.getElementById('college');
+        var courseSelect = document.getElementById('course');
+        var selectedCollege = collegeSelect.value;
+        var currentCourse = "{{ old('course', $student->course) }}";
+
+        courseSelect.innerHTML = '<option value="">Select Course</option>';
+
+        if (coursesByCollege[selectedCollege]) {
+            coursesByCollege[selectedCollege].forEach(function(course) {
+                var option = document.createElement('option');
+                option.value = course;
+                option.text = course;
+                if (course === currentCourse) {
+                    option.selected = true;
+                }
+                courseSelect.add(option);
+            });
+        }
+    }
+
+    // Initialize courses when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        updateCourses();
+    });
+</script>
+
+>>>>>>> Stashed changes
 @endsection

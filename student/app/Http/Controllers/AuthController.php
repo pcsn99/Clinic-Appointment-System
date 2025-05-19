@@ -26,8 +26,6 @@ class AuthController extends Controller
             'username' => 'required|unique:users',
             'email' => 'required|email|unique:users',
             'password' => 'required|confirmed|min:6',
-            'course' => 'required',
-            'year' => 'required',
             'contact_number' => 'required',
         ]);
     
@@ -36,8 +34,6 @@ class AuthController extends Controller
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'course' => $request->course,
-            'year' => $request->year,
             'contact_number' => $request->contact_number,
         ]);
     
@@ -92,6 +88,7 @@ class AuthController extends Controller
         
         $request->validate([
             'name' => 'required|string|max:255',
+            'college' => 'required|string|max:255',
             'course' => 'required|string|max:255',
             'year' => 'required|string|max:255',
             'contact_number' => 'required|string|max:255',
@@ -100,6 +97,7 @@ class AuthController extends Controller
 
         $student->update($request->only([
             'name',
+            'college',
             'course',
             'year',
             'contact_number',
