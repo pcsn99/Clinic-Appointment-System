@@ -16,10 +16,7 @@
         </div>
     @endif
 
-    <div class="text-center my-4">
-        <a href="{{ route('profile') }}" class="btn btn-primary mx-2">View Full Profile</a>
-        <a href="{{ route('profile.edit') }}" class="btn btn-outline-primary mx-2">Edit Profile</a>
-    </div>
+
 
     <div class="row mt-4">
         <!-- Current Appointment Section -->
@@ -45,9 +42,7 @@
                     <p class="text-muted fs-5">No current booking available.</p>
                 @endif
 
-                @if(!$currentBooking || !$currentBooking->is_present)
-                    <a href="{{ route('student.appointments.index') }}" class="btn btn-primary mt-3">📅 Book Appointment</a>
-                @endif
+
             </div>
         </div>
 
