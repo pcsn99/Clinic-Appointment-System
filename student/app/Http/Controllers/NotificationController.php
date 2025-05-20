@@ -4,17 +4,27 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class NotificationController extends Controller
 {
     public function index()
     {
-        return Auth::user()->notifications->map(function ($notification) {
+        $notifications = DB::table('notifications')
+            ->where('notifiable_id', Auth::id())
+            ->where('notifiable_type', get_class(Auth::user()))
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return $notifications->map(function ($notification) {
+            $data = json_decode($notification->data, true);
+
             return [
                 'id' => $notification->id,
-                'title' => $notification->data['title'] ?? 'Notification',
-                'message' => $notification->data['message'] ?? '',
+                'title' => $data['title'] ?? 'Notification',
+                'message' => $data['message'] ?? '',
                 'is_read' => !is_null($notification->read_at),
+                'created_at' => $notification->created_at,
             ];
         });
     }

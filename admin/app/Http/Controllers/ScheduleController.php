@@ -9,10 +9,9 @@ use App\Notifications\ScheduleCancelledNotification;
 
 class ScheduleController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $perPage = 6; // Set to display 6 items per page
-        $schedules = Schedule::orderBy('date')->orderBy('start_time')->paginate($perPage);
+        $schedules = Schedule::orderBy('date')->orderBy('start_time')->get();
         return view('schedules.index', compact('schedules'));
     }
 
