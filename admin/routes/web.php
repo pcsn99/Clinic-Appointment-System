@@ -53,4 +53,6 @@ Route::middleware('auth.admin')->group(function () {
 
     Route::get('/admin/logs', [LogViewerController::class, 'index'])->name('admin.logs');
 
+
+
 });

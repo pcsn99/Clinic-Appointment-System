@@ -59,15 +59,6 @@
                                        style="background-color: #17224D; border-radius: 4px; font-weight: bold;">
                                         <i class="bi bi-pencil"></i> Edit
                                     </a>
-                                    <form method="POST" action="{{ route('schedules.bulk.delete') }}" style="display:inline;">
-                                        @csrf
-                                        <input type="hidden" name="selected[]" value="{{ $schedule->id }}">
-                                        <button type="submit" class="btn btn-danger btn-sm"
-                                                onclick="return confirmDelete('{{ $schedule->date }}')"
-                                                style="border-radius: 4px; font-weight: bold;">
-                                            <i class="bi bi-trash"></i> Delete
-                                        </button>
-                                    </form>
                                 </td>
                             </tr>
                         @empty
@@ -79,10 +70,32 @@
                 </table>
             </div>
 
+            <!-- Message Input Modal -->
+            <div class="modal fade" id="reasonModal" tabindex="-1" aria-labelledby="reasonModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="reasonModalLabel">Confirm Deletion</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <label for="delete_reason">Enter reason to notify affected users (optional):</label>
+                            <textarea name="delete_reason" id="delete_reason" class="form-control" rows="3" placeholder="e.g. Doctor unavailable, rescheduling required..."></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-danger">Confirm Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Bulk Delete -->
             <div class="text-center mt-3">
-                <button type="submit" class="btn btn-danger px-5 py-2" id="bulkDeleteBtn" disabled
-                        style="border-radius: 6px; font-weight: bold;">Delete Selected</button>
+                <button type="button" class="btn btn-danger px-5 py-2" id="bulkDeleteBtn" disabled
+                        style="border-radius: 6px; font-weight: bold;" data-bs-toggle="modal" data-bs-target="#reasonModal">
+                    Delete Selected
+                </button>
             </div>
         </form>
 
@@ -112,10 +125,6 @@
 
     function toggleBulkDelete() {
         document.getElementById('bulkDeleteBtn').disabled = !document.querySelectorAll('input[name="selected[]"]:checked').length;
-    }
-
-    function confirmDelete(date) {
-        return confirm(`Are you sure you want to delete the schedule on ${date}?`);
     }
 
     const searchInput = document.getElementById('searchInput');
