@@ -109,7 +109,7 @@ class StudentAccountController extends Controller
     public function getStudentDetails($id)
     {
         try {
-            // Log the request for debugging
+            
             Log::info('Student details requested for ID: ' . $id);
             
             $student = User::findOrFail($id);
@@ -133,12 +133,12 @@ class StudentAccountController extends Controller
                 }),
             ];
             
-            // Log the response for debugging
+            
             Log::info('Student details response: ', ['student_id' => $id, 'appointment_count' => count($appointments)]);
             
             return response()->json($response);
         } catch (\Exception $e) {
-            // Log the error
+            
             Log::error('Error fetching student details: ' . $e->getMessage(), [
                 'student_id' => $id,
                 'exception' => $e
