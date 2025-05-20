@@ -7,6 +7,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\StudentDashboardController;
 use App\Http\Controllers\StudentAppointmentController;
+use App\Http\Controllers\ForgotPasswordController;
 
 Route::get('/', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/', [AuthController::class, 'login']);
@@ -15,6 +16,10 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 Route::post('/register', [AuthController::class, 'register']);
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+//forgetpass routes 
+Route::get('/forgot-password', [ForgotPasswordController::class, 'showForm'])->name('forgot.password');
+Route::post('/forgot-password', [ForgotPasswordController::class, 'handleReset'])->name('forgot.password.submit');
 
 Route::middleware(['auth.student'])->group(function () {
 
@@ -36,6 +41,8 @@ Route::middleware(['auth.student'])->group(function () {
     //notifs routes
     Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index']);
     Route::post('/notifications/{id}/read', [App\Http\Controllers\NotificationController::class, 'markAsRead']);
+
+
     
 
 });
