@@ -21,6 +21,8 @@ class SystemHealthCheck extends Command
         Log::build([
             'driver' => 'single',
             'path' => storage_path('logs/functional_test.log'),
+
+
         ])->info("==== SYSTEM HEALTH CHECK START (" . now() . ") ====");
 
         try {
@@ -32,54 +34,72 @@ class SystemHealthCheck extends Command
                 'start_time' => '08:00',
                 'end_time' => '08:15',
                 'slot_limit' => 1
+
+
             ]);
+
             app(ScheduleController::class)->store($scheduleRequest);
             $schedule = Schedule::latest()->first();
             Log::info("✅ Schedule created: ID {$schedule->id}");
 
             //book sched
+
             $bookingRequest = new Request([
                 'user_id' => 3, //student1
                 'schedule_id' => $schedule->id
             ]);
+
+
             app(AdminAppointmentController::class)->store($bookingRequest);
             Log::info("✅ Appointment booked for student1.");
 
-            // 3. Simulate missed appointment
+            // simulate missed
             $appointment = Appointment::where('user_id', 3)->where('schedule_id', $schedule->id)->first();
             $appointment->status = 'booked';
+
             $appointment->is_present = false;
             $appointment->save();
-            Log::info("⚠️ Marked appointment as missed.");
 
-            // 4. Create follow-up slot
+            Log::info("✅ Marked appointment as missed.");
+
+
+
+            // more slots
             $followUpSchedule = Schedule::create([
                 'date' => now()->toDateString(),
                 'start_time' => '08:30',
                 'end_time' => '08:45',
                 'slot_limit' => 1,
             ]);
-            Log::info("🕒 Follow-up slot created: {$followUpSchedule->start_time} - {$followUpSchedule->end_time}");
+            Log::info("✅ Follow-up slot created: {$followUpSchedule->start_time} - {$followUpSchedule->end_time}");
 
-            // 5. Run smart rescheduling
+
+
+            // smart resched
+
+
             app(AdminAppointmentController::class)->handleSmartRescheduling();
 
-            // 6. Check if student1 was rebooked
+            // check
             $newAppointment = Appointment::where('user_id', 3)
                 ->where('schedule_id', $followUpSchedule->id)
                 ->first();
 
             if ($newAppointment) {
+
                 Log::info("✅ Smart rescheduling successful. New appointment ID: {$newAppointment->id}");
             } else {
                 Log::warning("❌ Smart rescheduling failed.");
             }
 
-            DB::rollBack(); // Don't save test data
+
+            DB::rollBack(); //delete test data
         } catch (\Exception $e) {
+
             Log::error("❌ ERROR: " . $e->getMessage());
         }
 
         Log::info("==== SYSTEM HEALTH CHECK END (" . now() . ") ====\n");
+        
     }
 }
