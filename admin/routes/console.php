@@ -10,7 +10,7 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 return function (Schedule $schedule) {
-    $schedule->command('app:smart-reschedule')->veryFiveMinutes();
+    $schedule->command('app:smart-reschedule')->everyFiveMinutes();
     $schedule->command('app:mark-missed-appointments')->everyTwoHours();
     $schedule->command('app:system-health-check')->daily();
 };

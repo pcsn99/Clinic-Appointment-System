@@ -136,6 +136,9 @@ class StudentAppointmentController extends Controller
         return back()->with('success', 'Appointment cancelled.');
     }
 
+
+
+
     public function reschedule(Request $request, $id)
     {
         $request->validate([
@@ -152,12 +155,25 @@ class StudentAppointmentController extends Controller
         $schedule = Schedule::withCount('appointments')->findOrFail($request->schedule_id);
 
         if ($schedule->appointments_count >= $schedule->slot_limit) {
-            // TODO: Validate pin 
-            return back()->with('error', 'Slot is full. Please enter valid PIN to override.');
+            $validPin = PinCode::where('purpose', 'slot_limit_override')
+                ->where('type', 'hourly')
+                ->whereDate('created_at', now())
+                ->orderByDesc('created_at')
+                ->first();
+
+            if (!$validPin || $validPin->pin_code !== $request->pin) {
+                return back()->with('error', 'Slot is full. Please enter a valid PIN to override.');
+            }
         }
+
+        // Cancel old appointment notification
+        Auth::user()->notify(new AppointmentCancelled);
 
         $appt->schedule_id = $schedule->id;
         $appt->save();
+
+        // Notify for new booking
+        Auth::user()->notify(new AppointmentBooked($schedule));
 
         return back()->with('success', 'Appointment rescheduled.');
     }
