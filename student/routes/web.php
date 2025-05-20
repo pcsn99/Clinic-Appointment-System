@@ -18,26 +18,24 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth.student'])->group(function () {
 
-//Kat added
-Route::get('/dashboard', [StudentDashboardController::class, 'dashboard'])->name('dashboard');
+    //Kat added
+    Route::get('/dashboard', [StudentDashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/appointments', [StudentAppointmentController::class, 'index'])->name('student.appointments.index');
+    Route::post('/appointments/book', [StudentAppointmentController::class, 'book'])->name('student.appointments.book');
+    Route::post('/appointments/{id}/cancel', [StudentAppointmentController::class, 'cancel'])->name('student.appointments.cancel');
+    Route::post('/appointments/{id}/reschedule', [StudentAppointmentController::class, 'reschedule'])->name('student.appointments.reschedule');
+    Route::get('/appointments/schedules-by-date', [StudentAppointmentController::class, 'schedulesByDate']);
+    Route::get('/appointments/calendar-events', [StudentAppointmentController::class, 'calendarEvents']);
+    Route::post('/appointments/{appointment}/mark-present', [StudentAppointmentController::class, 'markAsPresent'])->name('student.appointments.markPresent');
 
-Route::get('/appointments', [StudentAppointmentController::class, 'index'])->name('student.appointments.index');
-Route::post('/appointments/book', [StudentAppointmentController::class, 'book'])->name('student.appointments.book');
-Route::post('/appointments/{id}/cancel', [StudentAppointmentController::class, 'cancel'])->name('student.appointments.cancel');
-Route::post('/appointments/{id}/reschedule', [StudentAppointmentController::class, 'reschedule'])->name('student.appointments.reschedule');
-Route::get('/appointments/schedules-by-date', [StudentAppointmentController::class, 'schedulesByDate']);
-Route::get('/appointments/calendar-events', [StudentAppointmentController::class, 'calendarEvents']);
-Route::post('/appointments/{appointment}/mark-present', [StudentAppointmentController::class, 'markAsPresent'])->name('student.appointments.markPresent');
+    // Kat added Student Profile Routes
+    Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
+    Route::get('/profile/edit', [AuthController::class, 'editProfile'])->name('profile.edit');
+    Route::put('/profile/update', [AuthController::class, 'updateProfile'])->name('profile.update');
 
-// Kat added Student Profile Routes
-Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
-Route::get('/profile/edit', [AuthController::class, 'editProfile'])->name('profile.edit');
-Route::put('/profile/update', [AuthController::class, 'updateProfile'])->name('profile.update');
-
-//notifs routes
-Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index']);
-Route::post('/notifications/{id}/read', [App\Http\Controllers\NotificationController::class, 'markAsRead']);
+    //notifs routes
+    Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index']);
+    Route::post('/notifications/{id}/read', [App\Http\Controllers\NotificationController::class, 'markAsRead']);
     
-    // Account routes
 
 });

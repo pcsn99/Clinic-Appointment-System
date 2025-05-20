@@ -49,18 +49,26 @@ class AuthController extends Controller
         $request->validate([
             'login' => 'required',
             'password' => 'required',
+            
         ]);
-    
+
         $login = $request->login;
-    
-        
         $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
-    
+
         if (Auth::attempt([$field => $login, 'password' => $request->password])) {
+
+            $user = Auth::user();
+
+            if ($user->role !== 'student') {
+                Auth::logout();
+                return back()->withErrors(['login' => 'Access denied.']);
+            }
+
             $request->session()->regenerate();
+
             return redirect()->route('dashboard');
         }
-    
+
         return back()->withErrors(['login' => 'Invalid credentials.']);
     }
 
