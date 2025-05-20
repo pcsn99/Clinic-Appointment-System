@@ -22,23 +22,20 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'username' => 'required|unique:users',
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|unique:users',
             'email' => 'required|email|unique:users',
             'password' => 'required|confirmed|min:6',
-            'course' => 'required',
-            'year' => 'required',
-            'contact_number' => 'required',
+            'contact_number' => 'required|string|max:20',
         ]);
     
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'course' => $request->course,
-            'year' => $request->year,
             'contact_number' => $request->contact_number,
+            'role' => 'student', 
         ]);
     
         return redirect()->route('login')->with('success', 'Registration successful. Please login.');
@@ -49,7 +46,7 @@ class AuthController extends Controller
         $request->validate([
             'login' => 'required',
             'password' => 'required',
-            
+
         ]);
 
         $login = $request->login;
