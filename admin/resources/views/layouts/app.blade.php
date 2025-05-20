@@ -129,6 +129,11 @@
                         <i class="bi bi-people"></i> Student Accounts
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('admin.logs') }}">
+                        <i class="bi bi-journal-text"></i> System Logs
+                    </a>
+                </li>
             </ul>
         </nav>
 
