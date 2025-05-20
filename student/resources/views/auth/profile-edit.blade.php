@@ -2,7 +2,6 @@
 
 @section('content')
 
-
 <style>
     .container {
         max-width: 1000px;
@@ -83,66 +82,158 @@
                     @enderror
                 </div>
 
-               <div class="mb-3">
+                <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
                     <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $student->email) }}" required>
-                        @error('email')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                    @error('email')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
 
-                 <div class="mb-3">
+                <div class="mb-3">
+                    <label for="college" class="form-label">College</label>
+                    @php
+                        $colleges = [
+                            "College of Arts and Sciences",
+                            "School of Business and Management",
+                            "School of Education",
+                            "College of Engineering",
+                            "College of Agriculture",
+                            "College of Computer Studies",
+                            "College of Nursing"
+                        ];
+                    @endphp
+                    <select class="form-control @error('college') is-invalid @enderror" id="college" name="college" required onchange="updateCourses()">
+                        <option value="">Select College</option>
+                        @foreach($colleges as $college)
+                            <option value="{{ $college }}" {{ old('college', $student->college) == $college ? 'selected' : '' }}>{{ $college }}</option>
+                        @endforeach
+                    </select>
+                    @error('college')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
                     <label for="course" class="form-label">Course</label>
-                    <input type="text" class="form-control @error('course') is-invalid @enderror" id="course" name="course" value="{{ old('course', $student->course) }}" required>
-                         @error('course')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                    <select class="form-control @error('course') is-invalid @enderror" id="course" name="course" required>
+                        <option value="">Select Course</option>
+                        <!-- Options will be populated by JS -->
+                    </select>
+                    @error('course')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
 
-                                        <div class="mb-3">
-                                            <label for="year" class="form-label">Year</label>
-                                            <input type="text" class="form-control @error('year') is-invalid @enderror" id="year" name="year" value="{{ old('year', $student->year) }}" required>
-                                            @error('year')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label for="contact_number" class="form-label">Contact Number</label>
-                                            <input type="text" class="form-control @error('contact_number') is-invalid @enderror" id="contact_number" name="contact_number" value="{{ old('contact_number', $student->contact_number) }}" required>
-                                            @error('contact_number')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label for="password" class="form-label">Password (leave blank to keep current password)</label>
-                                            <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password">
-                                            @error('password')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label for="password_confirmation" class="form-label">Confirm Password</label>
-                                            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
-                                        </div>
-
-                                        <div class="d-flex justify-content-between mt-4">
-                                            <a href="{{ route('profile') }}" class="btn btn-secondary btn-lg action-btn-half">
-                                                <i class="bi bi-arrow-left"></i> Back
-                                            </a>
-                                            <button type="submit" class="btn btn-primary btn-lg action-btn-half">
-                                                <i class="bi bi-save"></i> Save Changes
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="mb-3">
+                    <label for="year" class="form-label">Year</label>
+                    <select class="form-control @error('year') is-invalid @enderror" id="year" name="year" required>
+                        <option value="">Select Year Level</option>
+                        @foreach(['1st Year', '2nd Year', '3rd Year', '4th Year', '5th Year'] as $year)
+                            <option value="{{ $year }}" {{ old('year', $student->year) == $year ? 'selected' : '' }}>{{ $year }}</option>
+                        @endforeach
+                    </select>
+                    @error('year')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
 
-               
+                <div class="mb-3">
+                    <label for="contact_number" class="form-label">Contact Number</label>
+                    <input type="text" class="form-control @error('contact_number') is-invalid @enderror" id="contact_number" name="contact_number" value="{{ old('contact_number', $student->contact_number) }}" required>
+                    @error('contact_number')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password (leave blank to keep current password)</label>
+                    <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password">
+                    @error('password')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label for="password_confirmation" class="form-label">Confirm Password</label>
+                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{{ route('profile') }}" class="btn btn-secondary btn-lg action-btn-half">
+                        <i class="bi bi-arrow-left"></i> Back
+                    </a>
+                    <button type="submit" class="btn btn-primary btn-lg action-btn-half">
+                        <i class="bi bi-save"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const coursesByCollege = {
+        "College of Arts and Sciences": [
+            "AB in Psychology", "AB in Sociology – General Track", "AB in Sociology – Development Studies Track",
+            "AB in Sociology – Advancement in Leadership (AL) Track", "AB in Literature (Track A: Literary and Cultural Studies)",
+            "AB in Literature (Track B: Literature Across the Professions)", "AB in English Language (Track 1: English Language Studies as Discipline)",
+            "AB in English Language (Track 2: English Language Across the Professions)", "AB in International Studies", "AB in History",
+            "AB in Economics", "AB in Philosophy – Pre Law Track", "AB in Philosophy – Pre Divinity Track", "Bachelor of Science in Psychology",
+            "Bachelor of Science in Biology", "Bachelor of Science in Development Communication", "Bachelor of Science in Marine Biology",
+            "Bachelor of Science in Mathematics", "Bachelor of Science in Chemistry"
+        ],
+        "School of Business and Management": [
+            "Bachelor of Science in Accountancy", "Bachelor of Science in Management Accounting",
+            "Bachelor of Science in Business Administration Major in Business Economics",
+            "Bachelor of Science in Business Administration Major in Financial Management",
+            "Bachelor of Science in Business Administration Major in Marketing Management"
+        ],
+        "School of Education": [
+            "Bachelor of Elementary Education", "Bachelor of Early Childhood Education",
+            "Bachelor of Special Needs Education - Generalist", "Bachelor of Secondary Education Major in English",
+            "Bachelor of Secondary Education Major in Mathematics", "Bachelor of Secondary Education Major in Science",
+            "Bachelor of Secondary Education Major in Social Studies"
+        ],
+        "College of Engineering": [
+            "Bachelor of Science in Chemical Engineering", "Bachelor of Science in Civil Engineering",
+            "Bachelor of Science in Electrical Engineering", "Bachelor of Science in Mechanical Engineering",
+            "Bachelor of Science in Electronics Engineering", "Bachelor of Science in Industrial Engineering"
+        ],
+        "College of Agriculture": [
+            "Bachelor of Science in Agribusiness", "Bachelor of Science in Agriculture Major in Animal Science",
+            "Bachelor of Science in Agriculture Major in Crop Science", "Bachelor of Science in Food Technology",
+            "Bachelor of Science in Agricultural and Biosystems Engineering"
+        ],
+        "College of Computer Studies": [
+            "Bachelor of Science in Computer Science", "Bachelor of Science in Entertainment and Multimedia Computing with specialization in Digital Animation Technology",
+            "Bachelor of Science in Information Systems", "Bachelor of Science in Information Technology"
+        ],
+        "College of Nursing": ["Bachelor of Science in Nursing"]
+    };
+
+    function updateCourses() {
+        const collegeSelect = document.getElementById('college');
+        const courseSelect = document.getElementById('course');
+        const selectedCollege = collegeSelect.value;
+        const selectedCourse = "{{ old('course', $student->course) }}";
+
+        courseSelect.innerHTML = '<option value="">Select Course</option>';
+
+        if (coursesByCollege[selectedCollege]) {
+            coursesByCollege[selectedCollege].forEach(course => {
+                const option = document.createElement('option');
+                option.value = course;
+                option.text = course;
+                if (course === selectedCourse) {
+                    option.selected = true;
+                }
+                courseSelect.appendChild(option);
+            });
+        }
+    }
+
+    window.onload = updateCourses;
+</script>
 
 @endsection

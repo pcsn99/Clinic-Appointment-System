@@ -16,7 +16,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <style>
-        @auth
+        
         header {
             background-color: #17224D;
             color: white;
@@ -113,7 +113,7 @@
             margin-left: 250px;
             padding: 65px 20px 20px;
         }
-        @endauth
+        
     </style>
 </head>
 <body>
@@ -161,8 +161,14 @@
             </ul>
         </nav>
 
+        
+
         <main class="main-content flex-grow-1">
             @yield('content')
+            
+
+
+            
         </main>
     </div>
     @else
@@ -195,7 +201,7 @@
                             item.className = 'list-group-item';
                             item.innerHTML = `<strong>${n.title}</strong><br><small>${n.message}</small>`;
                             if (!n.is_read) {
-                                item.classList.add('bg-light');
+                                item.classList.add('bg-primary-subtle');
                                 unreadCount++;
                             }
 

@@ -16,12 +16,17 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
-            height: 100vh;
+            min-height: 100vh;
+            background-color: #f8f9fa;
         }
 
         header {
@@ -41,15 +46,17 @@
         .container-layout {
             display: flex;
             flex-grow: 1;
+            min-height: 0;
+            overflow: hidden;
         }
 
         .sidebar {
-            width: 230px; 
+            width: 230px;
             background-color: #17224D;
             color: white;
-            height: 100vh;
-            padding: 15px; 
+            padding: 15px;
             flex-shrink: 0;
+            overflow-y: auto;
         }
 
         .sidebar .nav-link {
@@ -61,7 +68,7 @@
             font-weight: bold;
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 8px;
-            margin-bottom: 12px; 
+            margin-bottom: 12px;
         }
 
         .sidebar .nav-link i {
@@ -76,14 +83,19 @@
         .main-content {
             flex-grow: 1;
             padding: 20px;
-            min-width: 0;
+            overflow-y: auto;
+        }
+
+        .btn-danger.btn-sm {
+            font-size: 14px;
+            padding: 5px 10px;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1></h1>
-        <form action="{{ route('admin.logout') }}" method="POST" style="display: inline;">
+        <h1>Admin Portal</h1>
+        <form action="{{ route('admin.logout') }}" method="POST" class="mb-0">
             @csrf
             <button type="submit" class="btn btn-danger btn-sm">Logout</button>
         </form>
@@ -117,17 +129,26 @@
                         <i class="bi bi-people"></i> Student Accounts
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('admin.logs') }}">
+                        <i class="bi bi-journal-text"></i> System Logs
+                    </a>
+                </li>
             </ul>
         </nav>
 
         <main class="main-content">
             @yield('content')
+
+
+
+            
         </main>
     </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    @stack('scripts') 
+    @stack('scripts')
 </body>
 </html>

@@ -1,13 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+
 <div class="container mt-5" style="max-width: 1000px;">
-    <!-- Header -->
     <div class="card text-center p-4 mb-4" style="background-color: #17224D; color: white;">
         <h2 class="fw-bold display-5">Account Schedule Management</h2>
     </div>
 
-    <!-- Actions -->
     <div class="card p-4 mb-4" style="border: 2px solid #17224D;">
         <div class="text-center mb-4">
             <a href="{{ route('schedules.create') }}" class="btn text-white mx-2 px-4 py-2"
@@ -20,23 +22,11 @@
             <div class="alert alert-success text-center fw-bold">{{ session('success') }}</div>
         @endif
 
-        <!-- Filter/Search -->
-        <div class="mb-4 d-flex flex-wrap justify-content-between align-items-center">
-            <input type="text" id="searchInput" class="form-control me-2 mb-2" placeholder="Search schedules..." style="flex: 1 1 200px;">
-            <select id="filterSelect" class="form-select me-2 mb-2" style="flex: 1 1 150px;">
-                <option value="all">All</option>
-                <option value="upcoming">Upcoming</option>
-                <option value="past">Past</option>
-            </select>
-            <button id="searchBtn" class="btn text-white mb-2" style="background-color: #17224D;">Search</button>
-        </div>
-
-        <!-- Table -->
         <form id="bulkDeleteForm" method="POST" action="{{ route('schedules.bulk.delete') }}">
             @csrf
             <div class="table-responsive">
-                <table class="table table-striped table-hover text-center">
-                    <thead class="table-light">
+                <table id="schedulesTable" class="table table-striped table-bordered text-center">
+                    <thead class="table-dark">
                         <tr>
                             <th><input type="checkbox" id="checkAll"></th>
                             <th>Date</th>
@@ -47,101 +37,81 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($schedules as $schedule)
-                            <tr class="schedule-row" data-date="{{ $schedule->date }}">
-                                <td><input type="checkbox" form="bulkDeleteForm" name="selected[]" value="{{ $schedule->id }}"></td>
+                        @foreach($schedules as $schedule)
+                            <tr>
+                                <td><input type="checkbox" name="selected[]" value="{{ $schedule->id }}"></td>
                                 <td>{{ $schedule->date }}</td>
                                 <td>{{ $schedule->start_time }}</td>
                                 <td>{{ $schedule->end_time }}</td>
                                 <td>{{ $schedule->slot_limit }}</td>
                                 <td>
-                                    <a href="{{ route('schedules.edit', $schedule) }}" class="btn btn-sm text-white"
-                                       style="background-color: #17224D; border-radius: 4px; font-weight: bold;">
+                                    <a href="{{ route('schedules.edit', $schedule) }}" class="btn btn-sm btn-primary">
                                         <i class="bi bi-pencil"></i> Edit
                                     </a>
-                                    <form method="POST" action="{{ route('schedules.bulk.delete') }}" style="display:inline;">
-                                        @csrf
-                                        <input type="hidden" name="selected[]" value="{{ $schedule->id }}">
-                                        <button type="submit" class="btn btn-danger btn-sm"
-                                                onclick="return confirmDelete('{{ $schedule->date }}')"
-                                                style="border-radius: 4px; font-weight: bold;">
-                                            <i class="bi bi-trash"></i> Delete
-                                        </button>
-                                    </form>
                                 </td>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" class="text-center text-muted fst-italic">No schedules found.</td>
-                            </tr>
-                        @endforelse
+                        @endforeach
                     </tbody>
                 </table>
             </div>
 
-            <!-- Bulk Delete -->
+            <!-- Modal for Delete Reason -->
+            <div class="modal fade" id="reasonModal" tabindex="-1" aria-labelledby="reasonModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="reasonModalLabel">Confirm Deletion</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <label for="delete_reason">Reason to notify affected users (optional):</label>
+                            <textarea name="delete_reason" id="delete_reason" class="form-control" rows="3"
+                                placeholder="e.g. Doctor unavailable..."></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-danger">Confirm Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bulk Delete Trigger -->
             <div class="text-center mt-3">
-                <button type="submit" class="btn btn-danger px-5 py-2" id="bulkDeleteBtn" disabled
-                        style="border-radius: 6px; font-weight: bold;">Delete Selected</button>
+                <button type="button" class="btn btn-danger px-5 py-2" id="bulkDeleteBtn" disabled
+                        style="border-radius: 6px; font-weight: bold;" data-bs-toggle="modal" data-bs-target="#reasonModal">
+                    Delete Selected
+                </button>
             </div>
         </form>
-
-        <!-- Pagination Info & Controls -->
-        <div class="d-flex justify-content-between align-items-center mt-4">
-            <div class="text-muted">
-                Showing {{ $schedules->firstItem() ?? 0 }} to {{ $schedules->lastItem() ?? 0 }} of {{ $schedules->total() }} entries
-            </div>
-            <div class="pagination justify-content-end">
-                {{ $schedules->appends(request()->query())->links('pagination::bootstrap-4') }}
-            </div>
-        </div>
     </div>
 </div>
 
 <!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
 <script>
-    document.getElementById('checkAll').addEventListener('change', function () {
-        const checkboxes = document.querySelectorAll('input[name="selected[]"]');
-        checkboxes.forEach(cb => cb.checked = this.checked);
-        toggleBulkDelete();
-    });
-
-    document.querySelectorAll('input[name="selected[]"]').forEach(cb => {
-        cb.addEventListener('change', toggleBulkDelete);
-    });
-
-    function toggleBulkDelete() {
-        document.getElementById('bulkDeleteBtn').disabled = !document.querySelectorAll('input[name="selected[]"]:checked').length;
-    }
-
-    function confirmDelete(date) {
-        return confirm(`Are you sure you want to delete the schedule on ${date}?`);
-    }
-
-    const searchInput = document.getElementById('searchInput');
-    const filterSelect = document.getElementById('filterSelect');
-    const searchBtn = document.getElementById('searchBtn');
-    const scheduleRows = document.querySelectorAll('.schedule-row');
-
-    searchBtn.addEventListener('click', function () {
-        const searchTerm = searchInput.value.toLowerCase();
-        scheduleRows.forEach(row => {
-            const rowText = row.textContent.toLowerCase();
-            row.style.display = rowText.includes(searchTerm) ? '' : 'none';
+    $(document).ready(function () {
+        const table = $('#schedulesTable').DataTable({
+            pageLength: 10,
+            order: [[1, 'asc']]
         });
-    });
 
-    filterSelect.addEventListener('change', function () {
-        const filterValue = filterSelect.value;
-        const today = new Date().toISOString().split('T')[0];
-
-        scheduleRows.forEach(row => {
-            const rowDate = row.getAttribute('data-date');
-            if (filterValue === 'all') row.style.display = '';
-            else if (filterValue === 'upcoming' && rowDate >= today) row.style.display = '';
-            else if (filterValue === 'past' && rowDate < today) row.style.display = '';
-            else row.style.display = 'none';
+        $('#checkAll').on('click', function () {
+            const isChecked = this.checked;
+            $('input[name="selected[]"]').prop('checked', isChecked);
+            toggleBulkDelete();
         });
+
+        $(document).on('change', 'input[name="selected[]"]', toggleBulkDelete);
+
+        function toggleBulkDelete() {
+            const anyChecked = $('input[name="selected[]"]:checked').length > 0;
+            $('#bulkDeleteBtn').prop('disabled', !anyChecked);
+        }
     });
 </script>
+
 @endsection
