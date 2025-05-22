@@ -153,6 +153,7 @@ DB_PASSWORD=your_secure_password
 php artisan key:generate
 php artisan storage:link
 php artisan migrate
+php artisan migrate --seed
 ```
 
 
