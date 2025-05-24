@@ -16,6 +16,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <style>
+        @auth
         
         header {
             background-color: #17224D;
@@ -113,7 +114,8 @@
             margin-left: 250px;
             padding: 65px 20px 20px;
         }
-        
+        @endauth
+    
     </style>
 </head>
 <body>

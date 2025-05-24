@@ -87,7 +87,7 @@ class StudentAppointmentController extends Controller
 
         
         $existing = Appointment::where('user_id', $userId)
-            ->where('status', 'booked')
+            ->whereIn('status', ['booked', 'completed'])
             ->first();
 
         if ($existing) {
@@ -100,9 +100,6 @@ class StudentAppointmentController extends Controller
         $isFull = $schedule->appointments_count >= $schedule->slot_limit;
         if ($isFull) {
             $validPin = PinCode::where('purpose', 'slot_limit_override')
-                ->where('type', 'hourly')
-                ->whereDate('created_at', now())
-                ->orderByDesc('created_at')
                 ->first();
     
             if (!$validPin || $validPin->pin_code !== $request->pin) {
@@ -148,7 +145,7 @@ class StudentAppointmentController extends Controller
 
         $appt = Appointment::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
 
-        if ($appt->is_present) {
+        if ($appt->is_present || $appt->status === 'completed') {
             return back()->with('error', 'Cannot reschedule an appointment already marked as present.');
         }
 
@@ -156,9 +153,6 @@ class StudentAppointmentController extends Controller
 
         if ($schedule->appointments_count >= $schedule->slot_limit) {
             $validPin = PinCode::where('purpose', 'slot_limit_override')
-                ->where('type', 'hourly')
-                ->whereDate('created_at', now())
-                ->orderByDesc('created_at')
                 ->first();
 
             if (!$validPin || $validPin->pin_code !== $request->pin) {
@@ -184,11 +178,12 @@ class StudentAppointmentController extends Controller
             'pin' => 'required|string'
         ]);
 
+        
+
         $validPin = \App\Models\PinCode::where('purpose', 'appointment_attendance')
-            ->where('type', 'hourly')
-            ->whereDate('created_at', now())
-            ->orderByDesc('created_at')
             ->first();
+
+        //dd($validPin);
 
         if (!$validPin || $validPin->pin_code !== $request->pin) {
             return back()->with('error', 'Invalid PIN.');

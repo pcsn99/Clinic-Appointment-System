@@ -15,10 +15,15 @@
         </div>
     @endif
 
-    <div class="text-center my-4">
-        <a href="{{ route('profile') }}" class="btn btn-primary mx-2">View Full Profile</a>
-        <a href="{{ route('profile.edit') }}" class="btn btn-outline-primary mx-2">Edit Profile</a>
-    </div>
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+
+    <!-- Profile buttons removed as they're already in the sidebar -->
 
     <div class="row mt-4">
         <!-- Current Appointment -->
@@ -35,15 +40,13 @@
                     @if($currentBooking->status === 'booked' && !$currentBooking->is_present)
                         <button class="btn btn-success btn-lg mx-2" data-bs-toggle="modal" data-bs-target="#pinModal">✅ Mark as Present</button>
                     @elseif($currentBooking->is_present)
-                        <button class="btn btn-primary btn-lg mx-2" disabled>📎 Upload Certificate (Coming Soon)</button>
+                        
                     @endif
                 @else
                     <p class="text-muted fs-5">No current booking available.</p>
                 @endif
 
-                @if(!$currentBooking || !$currentBooking->is_present)
-                    <a href="{{ route('student.appointments.index') }}" class="btn btn-primary mt-3">📅 Book Appointment</a>
-                @endif
+                <!-- Book Appointment button removed as it's already in the sidebar -->
             </div>
         </div>
 
@@ -132,6 +135,8 @@
 @endif
 
 <script>
+    // This is standard Blade syntax - ignore any linting errors as they don't affect functionality
+    
     document.querySelectorAll('.schedule-slot').forEach(item => {
         item.addEventListener('click', () => {
             const scheduleId = item.dataset.id;
@@ -145,7 +150,7 @@
 
             const form = document.getElementById('bookingForm');
             const action = hasBooking 
-                ? `/appointments/{{ $currentBooking?->id }}/reschedule`
+                ? `/appointments/{{ $currentBooking?->id ?? 0 }}/reschedule`
                 : `{{ route('student.appointments.book') }}`;
 
             form.action = action;

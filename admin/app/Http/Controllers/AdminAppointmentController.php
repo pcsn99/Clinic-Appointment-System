@@ -101,15 +101,17 @@ class AdminAppointmentController extends Controller
     
         return view('appointments.index', compact('appointments'));
     }
-  
-    public function mark(Request $request, Appointment $appointment)
+
+    
+
+    public function Mark(Request $request, Appointment $appointment)
     {
         $value = filter_var($request->input('is_present'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-    
+        dd($value);
         if (!is_bool($value)) {
             return back()->with('error', 'Invalid presence value.');
         }
-    
+        //dd($appointment);
         $appointment->is_present = $value;
         $appointment->status = $value ? 'completed' : 'booked';
         $appointment->save();
@@ -121,7 +123,10 @@ class AdminAppointmentController extends Controller
     
         return back()->with('success', 'Attendance updated.');
     }
-    
+
+
+
+
 
     public function bulkDelete(Request $request)
     {

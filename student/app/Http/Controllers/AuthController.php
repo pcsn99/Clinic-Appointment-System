@@ -27,6 +27,9 @@ class AuthController extends Controller
             'email' => 'required|email|unique:users',
             'password' => 'required|confirmed|min:6',
             'contact_number' => 'required|string|max:20',
+            'college' => 'required|string|max:255',
+            'course' => 'required|string|max:255',
+            'year' => 'required|string|max:255',
         ]);
     
         $user = User::create([
@@ -35,6 +38,9 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'contact_number' => $request->contact_number,
+            'college' => $request->college,
+            'course' => $request->course,
+            'year' => $request->year,
             'role' => 'student', 
         ]);
     

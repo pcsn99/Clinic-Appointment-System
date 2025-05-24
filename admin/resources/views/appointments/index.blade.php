@@ -140,8 +140,8 @@
                                             </td>
                                             <td>${appt.is_present ? 'Yes' : 'No'}</td>
                                             <td>
-                                                <form method="POST" action="/admin/appointments/${appt.id}/mark">
-                                                    @csrf
+                                                <form method="POST" action="${window.location.origin}/appointments/${appt.id}/mark">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                     <input type="hidden" name="is_present" value="${appt.is_present ? 0 : 1}">
                                                     <button type="submit" class="btn btn-sm ${appt.is_present ? 'btn-secondary' : 'btn-success'}"
                                                             onclick="return confirm('${appt.is_present ? 'Revert to Booked?' : 'Mark as Present?'}')">

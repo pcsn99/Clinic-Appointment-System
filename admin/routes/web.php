@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\AdminAuthController;
-use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\MarkAppointment;
 use App\Http\Controllers\Admin\LogViewerController;
 use App\Http\Controllers\AdminAppointmentController;
 use App\Http\Controllers\StudentAccountController;
@@ -41,7 +41,7 @@ Route::middleware('auth.admin')->group(function () {
     Route::get('/appointments/create', [AdminAppointmentController::class, 'create'])->name('admin.appointments.create');
     Route::post('/appointments/create', [AdminAppointmentController::class, 'store'])->name('admin.appointments.store');
     Route::get('/appointments', [AdminAppointmentController::class, 'index'])->name('admin.appointments.index');
-    Route::post('/appointments/{appointment}/mark', [AdminAppointmentController::class, 'mark'])->name('admin.appointments.mark');
+    Route::post('/appointments/{appointment}/mark', [MarkAppointment::class, 'Mark'])->name('admin.appointments.mark');
     Route::post('/appointments/bulk-delete', [AdminAppointmentController::class, 'bulkDelete'])->name('admin.appointments.bulkDelete');
     Route::get('/appointments/calendar-events', [AdminAppointmentController::class, 'calendarEvents']);
     Route::get('/appointments/schedules-by-date', [AdminAppointmentController::class, 'schedulesByDate']);

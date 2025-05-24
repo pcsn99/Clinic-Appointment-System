@@ -9,7 +9,6 @@
         background: url('{{ asset('src/xu.png') }}') no-repeat center center fixed;
         background-size: cover;
     }
-
     body::before {
         content: "";
         position: fixed;
@@ -27,7 +26,7 @@
         <div class="col-md-6">
             <div class="card shadow-lg">
                 <div class="card-header text-center" style="background-color: #17224D; color: white;">
-                    <h2>Hello!<br>Welcome Back!</h2>
+                    <h2>Hello!</h2>
                     <p class="mb-0">Let's Login to Your Account</p>
                 </div>
                 <div class="card-body p-4">
