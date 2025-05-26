@@ -130,6 +130,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ route('admin.walkin.create') }}">
+                        <i class="bi bi-megaphone"></i> Walk-In Notification
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{{ route('admin.logs') }}">
                         <i class="bi bi-journal-text"></i> System Logs
                     </a>

@@ -43,4 +43,9 @@ class User extends Authenticatable
     protected $casts = [
         'password' => 'hashed',
     ];
+
+    public function appointments()
+    {
+        return $this->hasMany(\App\Models\Appointment::class);
+    }
 }
