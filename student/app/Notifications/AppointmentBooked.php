@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
+use Illuminate\Notifications\Messages\MailMessage;
 use App\Models\Schedule;
 
 class AppointmentBooked extends Notification
@@ -19,7 +20,18 @@ class AppointmentBooked extends Notification
 
     public function via($notifiable)
     {
-        return ['database'];
+        return ['mail', 'database'];
+    }
+
+    public function toMail($notifiable)
+    {
+        return (new MailMessage)
+            ->subject('Appointment Confirmed')
+            ->greeting('Hello ' . $notifiable->name . ',')
+            ->line("Your appointment has been successfully booked.")
+            ->line("📅 Date: {$this->schedule->date}")
+            ->line("⏰ Time: {$this->schedule->start_time}")
+            ->line('Thank you for using our Clinic Appointment System!');
     }
 
     public function toDatabase($notifiable)
