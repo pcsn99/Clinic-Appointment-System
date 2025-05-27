@@ -61,27 +61,31 @@ class AdminAppointmentController extends Controller
             'schedule_id' => 'required|exists:schedules,id',
         ]);
 
-        $existing = Appointment::where('user_id', $request->user_id)
-            ->where('schedule_id', $request->schedule_id)
-            ->first();
+        
+        $existingAppointments = Appointment::where('user_id', $request->user_id)
+            ->where('status', 'booked')
+            ->get();
 
-        if ($existing) {
-            return back()->with('error', 'User already booked for this schedule.');
+        foreach ($existingAppointments as $appointment) {
+            $appointment->status = 'cancelled';
+            $appointment->save();
         }
 
-        Appointment::create([
+        
+        $appointment = Appointment::create([
             'user_id' => $request->user_id,
             'schedule_id' => $request->schedule_id,
             'status' => 'booked',
         ]);
 
+     
         $user = User::find($request->user_id);
         $user->notify(new AppointmentBookedByAdmin());
 
-        Log::info("Admin booked appointment for user_id: {$user->id} on schedule_id: {$request->schedule_id}");
+        
+        Log::info("Admin rebooked appointment for user_id: {$user->id} to schedule_id: {$request->schedule_id}");
 
-       
-        return back()->with('appointment_success', 'Appointment booked successfully.');
+        return back()->with('appointment_success', 'Appointment successfully rebooked.');
     }
 
 

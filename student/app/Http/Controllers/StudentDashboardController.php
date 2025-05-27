@@ -13,13 +13,20 @@ class StudentDashboardController extends Controller
     {
         $user = Auth::user();
 
-  
         $currentBooking = Appointment::with('schedule')
             ->where('user_id', $user->id)
+            ->where('status', 'booked')
             ->whereHas('schedule', fn($q) => $q->whereDate('date', '>=', now()))
             ->orderByDesc('schedule_id')
             ->first();
 
+        if (!$currentBooking) {
+            $currentBooking = Appointment::with('schedule')
+                ->where('user_id', $user->id)
+                ->where('status', 'cancelled')
+                ->orderByDesc('updated_at')
+                ->first();
+        }
         $todaySchedules = Schedule::whereDate('date', now())
             ->withCount('appointments')
             ->get();
