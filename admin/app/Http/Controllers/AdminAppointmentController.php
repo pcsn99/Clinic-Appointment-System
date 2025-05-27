@@ -32,7 +32,9 @@ class AdminAppointmentController extends Controller
             
             if (!empty(trim($search))) {
                 $users = User::where('name', 'like', "%{$search}%")
+
                             ->orWhere('email', 'like', "%{$search}%")
+
                             ->orWhere('username', 'like', "%{$search}%")
                             ->get();
             } else {
@@ -42,9 +44,14 @@ class AdminAppointmentController extends Controller
         }
 
         if ($request->has('user_id')) {
-            $schedules = Schedule::whereDoesntHave('appointments', function ($query) use ($request) {
-                $query->where('user_id', $request->user_id);
-            })->orderBy('date')->orderBy('start_time')->get();
+            
+            $schedules = Schedule::whereDate('date', '>=', Carbon::today())
+                ->whereDoesntHave('appointments', function ($query) use ($request) {
+                    $query->where('user_id', $request->user_id);
+                })
+                ->orderBy('date')
+                ->orderBy('start_time')
+                ->get();
 
             $selectedUser = User::find($request->user_id);
         } else {
