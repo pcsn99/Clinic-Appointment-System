@@ -36,7 +36,7 @@ Route::middleware(['auth.student'])->group(function () {
     // Kat added Student Profile Routes
     Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
     Route::get('/profile/edit', [AuthController::class, 'editProfile'])->name('profile.edit');
-    Route::put('/profile/update', [AuthController::class, 'updateProfile'])->name('profile.update');
+    Route::put('/profile/update', [AccountController::class, 'update'])->name('profile.update');
 
     //notifs routes
     Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index']);

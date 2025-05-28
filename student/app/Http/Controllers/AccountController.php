@@ -34,15 +34,17 @@ class AccountController extends Controller
             'year' => 'required',
             'contact_number' => 'required',
             'username' => 'required|unique:users,username,'.$user->id,
+            
         ]);
 
-        // Check if password is being updated
+        //dd($request->filled('password'));
         if ($request->filled('password')) {
             $request->validate([
                 'password' => 'required|confirmed|min:6',
             ]);
             
             $user->password = Hash::make($request->password);
+            //dd($user->password);
         }
 
         $user->name = $request->name;
@@ -51,8 +53,8 @@ class AccountController extends Controller
         $user->year = $request->year;
         $user->contact_number = $request->contact_number;
         $user->username = $request->username;
-        $user->save;
+        $user->save();
 
-        return \redirect()->route('account.show')->with('success', 'Profile updated successfully.');
+        return redirect()->route('profile')->with('success', 'Profile updated successfully.');
     }
 }
