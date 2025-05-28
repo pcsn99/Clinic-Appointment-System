@@ -155,6 +155,25 @@ php artisan storage:link
 php artisan migrate
 php artisan migrate --seed
 ```
+**Automate System Tasks using crontab (LINUX)**
+
+Navigate to admin folder and open crontab configuration
+```bash
+cd admin
+crontab -e
+```
+
+Add the following cron jobs
+```bash
+# Run smart reschedule every 5 minutes
+*/5 * * * * cd /home/Dev_User/laravel_project/clinic/admin && php artisan app:smart-reschedule >> /dev/null 2>&1
+
+# Mark missed appointments every 2 hours
+0 */2 * * * cd /home/Dev_User/laravel_project/clinic/admin && php artisan app:mark-missed-appointments >> /dev/null 2>&1
+
+# Process Laravel job queue every minute
+* * * * * cd /home/Dev_User/laravel_project/clinic/admin && php artisan queue:work --once >> /dev/null 2>&1
+```
 
 
 
@@ -163,10 +182,10 @@ php artisan migrate --seed
 
 | Role      | Username               | Password     |
 |-----------|------------------------|--------------|
-| Clinic    | clinicadmin            | admin123  |
+| Clinic    | clinicadmin            | admin123     |
 
 
-Use any of these to log in at `/`.
+
 
 
 
